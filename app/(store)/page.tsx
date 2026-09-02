@@ -115,15 +115,19 @@ export default function HomePage() {
             />
           </div>
 
-          <div className="sm:absolute sm:inset-y-0 sm:left-0 sm:flex sm:items-center">
-            <div className="mx-auto w-full max-w-[var(--max-width)] px-[var(--gutter)] pb-8 sm:pb-0">
-              <div className="sm:max-w-[42%]">
+          <div className="sm:absolute sm:inset-0 sm:flex sm:items-center">
+            <div className="mx-auto w-full max-w-[var(--max-width)] px-[var(--gutter)] pb-7 pt-5 sm:pb-0 sm:pt-0">
+              <div className="sm:max-w-[40%] lg:max-w-[38%]">
                 <p className="text-xs text-paper/60">Current release</p>
-                <h1 className="display mt-2 text-5xl text-paper">
+                {/* Full width below the image on mobile, so it can run large.
+                    Between sm and lg it shares the banner with the artwork in a
+                    narrow column, so it steps down; at lg the column is wide
+                    enough for the full display size again. */}
+                <h1 className="display mt-2 text-5xl text-paper sm:text-4xl lg:text-5xl">
                   Skeleton Keychain
                 </h1>
 
-                <div className="mt-5 h-px w-full max-w-[380px] bg-paper/40" />
+                <div className="mt-4 h-px w-full max-w-[380px] bg-paper/40 sm:mt-5" />
 
                 <div className="mt-4 flex flex-wrap gap-x-7 gap-y-1">
                   <span className="text-sm text-paper/60">Soft PVC</span>
@@ -131,7 +135,7 @@ export default function HomePage() {
                   <span className="text-sm text-paper/60">Sealed polybag</span>
                 </div>
 
-                <span className="link-underline mt-5 inline-block text-sm text-paper">
+                <span className="link-underline mt-4 inline-block text-sm text-paper sm:mt-5">
                   See the object
                 </span>
               </div>

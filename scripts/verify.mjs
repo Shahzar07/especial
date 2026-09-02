@@ -22,14 +22,55 @@ const ok = (label, cond, extra = "") => {
 };
 const head = (t) => console.log(`\n── ${t} ──`);
 
+
+/**
+ * Submit the gate and wait until we are actually through it.
+ *
+ * A fixed sleep here is a race: on a loaded machine the submit had not landed
+ * before the next navigation, so the run carried on still gated and failed
+ * later with a confusing "no Add to bag button". Wait for the redirect itself.
+ */
+async function passGate(page, email) {
+  await page.goto(`${BASE}/gate`, { waitUntil: "domcontentloaded" });
+  await page.waitForSelector("#gate-email", { timeout: 20000 });
+  await page.fill("#gate-email", email);
+  await page.click('button[type="submit"]');
+  await page.waitForFunction(() => !location.pathname.startsWith("/gate"), null, {
+    timeout: 30000,
+  });
+}
+
+/**
+ * Every context gets its own client IP.
+ *
+ * The gate is rate limited to 5 submissions per 10 minutes per IP, which is
+ * correct behaviour and exactly what a repeated test run trips: run the suite
+ * twice inside the window and the second run is throttled, failing with
+ * confusing "still on /gate" errors that look like a product bug. Handing each
+ * context a distinct X-Forwarded-For keeps runs hermetic without weakening the
+ * limiter itself.
+ */
+let ipCounter = 0;
+function freshContext(browser, options = {}) {
+  ipCounter += 1;
+  const n = ipCounter;
+  return browser.newContext({
+    ...options,
+    extraHTTPHeaders: {
+      ...(options.extraHTTPHeaders ?? {}),
+      "x-forwarded-for": `198.51.100.${(n % 250) + 1}`,
+    },
+  });
+}
+
 const browser = await chromium.launch({ executablePath: EXE });
 
 /* 1 ── Gate ------------------------------------------------------------- */
 head("Gate: deep link is preserved and restored");
-const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+const ctx = await freshContext(browser, { viewport: { width: 1440, height: 900 } });
 const page = await ctx.newPage();
 
-await page.goto(`${BASE}/product/skeleton-keychain`, { waitUntil: "networkidle" });
+await page.goto(`${BASE}/product/skeleton-keychain`, { waitUntil: "domcontentloaded" });
 ok("clean browser is gated", page.url().includes("/gate"), page.url());
 ok("?next= preserved", decodeURIComponent(page.url()).includes("next=/product/skeleton-keychain"));
 
@@ -52,12 +93,12 @@ ok("cookie is httpOnly", Boolean(cookie?.httpOnly));
 ok("cookie lasts 180 days", cookie && Math.round((cookie.expires * 1000 - Date.now()) / 86_400_000) === 180);
 
 const tab = await ctx.newPage();
-await tab.goto(`${BASE}/keychains`, { waitUntil: "networkidle" });
+await tab.goto(`${BASE}/keychains`, { waitUntil: "domcontentloaded" });
 ok("cookie survives a new tab", !tab.url().includes("/gate"));
-await tab.reload({ waitUntil: "networkidle" });
+await tab.reload({ waitUntil: "domcontentloaded" });
 ok("cookie survives a hard refresh", !tab.url().includes("/gate"));
 await ctx.clearCookies();
-await tab.goto(`${BASE}/keychains`, { waitUntil: "networkidle" });
+await tab.goto(`${BASE}/keychains`, { waitUntil: "domcontentloaded" });
 ok("clearing the cookie re-gates", tab.url().includes("/gate"));
 
 /* 2 ── Crawler allowlist ------------------------------------------------ */
@@ -66,9 +107,9 @@ for (const [name, ua] of [
   ["Googlebot", "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"],
   ["Twitterbot", "Twitterbot/1.0"],
 ]) {
-  const c = await browser.newContext({ userAgent: ua });
+  const c = await freshContext(browser, { userAgent: ua });
   const p = await c.newPage();
-  await p.goto(`${BASE}/`, { waitUntil: "networkidle" });
+  await p.goto(`${BASE}/`, { waitUntil: "domcontentloaded" });
   ok(`${name} is not gated`, !p.url().includes("/gate"), p.url());
   await c.close();
 }
@@ -76,18 +117,15 @@ for (const [name, ua] of [
 /* 3 ── Visual invariants ------------------------------------------------ */
 head("Design rules hold at computed style");
 const routes = ["/gate", "/", "/keychains", "/product/skeleton-keychain", "/privacy"];
-const store = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+const store = await freshContext(browser, { viewport: { width: 1440, height: 900 } });
 const sp = await store.newPage();
-await sp.goto(`${BASE}/gate`, { waitUntil: "networkidle" });
-await sp.fill("#gate-email", "rules@example.com");
-await sp.click('button[type="submit"]');
-await sp.waitForTimeout(1200);
+await passGate(sp, "rules@example.com");
 
 const violations = [];
 for (const w of [320, 768, 1440, 2560]) {
   await sp.setViewportSize({ width: w, height: 900 });
   for (const r of routes) {
-    await sp.goto(BASE + r, { waitUntil: "networkidle" });
+    await sp.goto(BASE + r, { waitUntil: "domcontentloaded" });
     const found = await sp.evaluate(() => {
       const bad = [];
       for (const el of document.querySelectorAll("*")) {
@@ -115,7 +153,7 @@ ok("no radius >2px, no shadow, no weight >600, no serif <32px, no h-overflow",
 /* 4 ── Cart ------------------------------------------------------------- */
 head("Cart drawer");
 await sp.setViewportSize({ width: 1440, height: 900 });
-await sp.goto(`${BASE}/product/skeleton-keychain`, { waitUntil: "networkidle" });
+await sp.goto(`${BASE}/product/skeleton-keychain`, { waitUntil: "domcontentloaded" });
 await sp.click('button:has-text("Add to bag")');
 await sp.waitForTimeout(700);
 const drawerState = () => sp.evaluate(() => {
@@ -133,9 +171,13 @@ ok("Escape closes and restores inert", !closed.on && closed.inert);
 
 /* 5 ── Reduced motion --------------------------------------------------- */
 head("prefers-reduced-motion");
-const rm = await browser.newContext({ reducedMotion: "reduce" });
+const rm = await freshContext(browser, { reducedMotion: "reduce" });
 const rp = await rm.newPage();
-await rp.goto(`${BASE}/gate`, { waitUntil: "networkidle" });
+await rp.goto(`${BASE}/gate`, { waitUntil: "domcontentloaded" });
+// The reveal animation is neutralised under reduced motion, not removed, so it
+// still needs a frame to land on its end state before the opacity is sampled.
+await rp.waitForSelector(".gate-reveal", { timeout: 15000 });
+await rp.waitForTimeout(500);
 const anim = await rp.evaluate(() => {
   const cs = getComputedStyle(document.querySelector(".gate-reveal"));
   return { dur: parseFloat(cs.animationDuration), opacity: parseFloat(cs.opacity) };

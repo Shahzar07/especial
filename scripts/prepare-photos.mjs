@@ -481,7 +481,7 @@ console.log("Banners");
  * ink so the site still builds. The page sets the wordmark over it in white
  * either way, which is why the artwork wants a quiet area for the type.
  */
-async function hero({ out, supplied, fallback }) {
+async function hero({ out, supplied, fallback, cropTop = 0 }) {
   const candidates = [`${BANNER_SRC}/${supplied}.png`, `${BANNER_SRC}/${supplied}.jpg`];
   const file = candidates.find((f) => existsSync(f));
 
@@ -489,17 +489,33 @@ async function hero({ out, supplied, fallback }) {
     // Cap the long edge: past this the file cost outruns any visible gain,
     // since next/image re-encodes and downscales per viewport anyway.
     const meta = await sharp(file).metadata();
+
+    // The only trim ever taken from supplied artwork, and only where the
+    // artwork is empty: the portrait banner is so tall that at phone widths the
+    // hero ran past the bottom of the screen before reaching the headline.
+    // Trimming its empty upper band brings the objects up and the whole hero
+    // inside one viewport. Nothing with content in it is ever cut.
+    const trimmed = Math.round(meta.height * cropTop);
+    const srcW = meta.width;
+    const srcH = meta.height - trimmed;
+
+    // Cap the long edge: past this the file cost outruns any visible gain,
+    // since next/image re-encodes and downscales per viewport anyway.
     const MAX = 2600;
-    const scale = Math.min(1, MAX / Math.max(meta.width, meta.height));
-    const width = Math.round(meta.width * scale);
-    const height = Math.round(meta.height * scale);
+    const scale = Math.min(1, MAX / Math.max(srcW, srcH));
+    const width = Math.round(srcW * scale);
+    const height = Math.round(srcH * scale);
 
     await sharp(file)
+      .extract({ left: 0, top: trimmed, width: srcW, height: srcH })
       .resize(width, height, { fit: "fill", kernel: "lanczos3" })
       .jpeg({ quality: 93, mozjpeg: true, chromaSubsampling: "4:4:4" })
       .toFile(`${OUT}/${out}`);
 
-    console.log(`  ${out.padEnd(30)} ${width}x${height}  supplied, uncropped`);
+    console.log(
+      `  ${out.padEnd(30)} ${width}x${height}  supplied` +
+        (trimmed ? `, ${Math.round(cropTop * 100)}% empty top trimmed` : ", uncropped"),
+    );
     return { src: `/products/${out}`, width, height };
   }
 
@@ -521,7 +537,7 @@ const banners = {
     },
   }),
   heroMobile: await hero({
-    out: "hero-mobile.jpg", supplied: "hero-mobile",
+    out: "hero-mobile.jpg", supplied: "hero-mobile", cropTop: 0.16,
     fallback: {
       width: 1200, height: 1500,
       placements: [
