@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ProductCard } from "@/components/product-card";
+import { ReleaseCard } from "@/components/release-card";
 import { CategoryGrid } from "@/components/category-grid";
 import { SectionHeading } from "@/components/section-heading";
 import { FeatureGrid, SpecTable, type Feature } from "@/components/feature-grid";
@@ -146,20 +146,16 @@ export default function HomePage() {
       </section>
 
       <div className="mx-auto max-w-[var(--max-width)] px-[var(--gutter)]">
-        {/* 2 — The release. Two objects, given room. */}
+        {/* 2 — The release. Wide boxes rather than tall tiles: at two products
+               the portrait grid left two half-page images and a lot of air. */}
         <section className="mt-9">
           <SectionHeading title="Current release" />
           <div
             className="mt-6 grid grid-cols-1 sm:grid-cols-2"
             style={{ gap: "var(--grid-gap)" }}
           >
-            {releases.map((product, i) => (
-              <ProductCard
-                key={product.slug}
-                product={product}
-                sizes="(min-width: 640px) 50vw, 100vw"
-                priority={i === 0}
-              />
+            {releases.map((product) => (
+              <ReleaseCard key={product.slug} product={product} />
             ))}
           </div>
         </section>

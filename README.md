@@ -270,9 +270,36 @@ minutes per IP, so each browser context carries its own `X-Forwarded-For` drawn
 from a range randomised per run. Without that, a second run inside the window
 gets throttled and reports as though the cookie had stopped working.
 
-Last run: **22 passed, 0 failed**, three times consecutively.
+Last run: **29 passed, 0 failed**.
 
 ---
+
+## Checkout
+
+`/checkout` collects contact and shipping details, shows a summary, and places
+the order; `/checkout/confirmed` acknowledges it with a reference.
+
+**The catalogue prices the order, never the browser.** The page sends only
+slugs, variant ids and quantities. `lib/orders.ts` looks each one up, recomputes
+every price and total, and re-checks availability, because a variant can sell
+out between going into a bag and being paid for. A line arriving with its own
+`priceCents` is ignored — there is a test for exactly that.
+
+The same function backs `/api/checkout/quote`, which fills the summary panel, so
+the figure a customer reads and the figure they are charged come from one place
+and cannot drift.
+
+Set `STRIPE_SECRET_KEY` and `placeOrder` creates a real Stripe Checkout Session
+and returns its URL. Unset, the order is recorded and acknowledged instead, so
+validation, pricing, stock and confirmation are all exercisable before an
+account exists. Card details never touch this site in either case.
+
+Shipping is a flat `SHIPPING_CENTS`, free over `FREE_SHIPPING_OVER_CENTS`. Both
+are constants at the top of `lib/orders.ts`.
+
+Not yet built: no order is persisted anywhere (it is logged), there is no
+webhook to confirm a Stripe payment settled, and stock is not decremented.
+Those need a datastore, which this build does not have.
 
 ## Before you launch
 

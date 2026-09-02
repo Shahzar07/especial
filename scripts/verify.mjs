@@ -206,6 +206,68 @@ head("Subscribe endpoint is always parseable");
   }
 }
 
+/* 4c ── Checkout ──────────────────────────────────────────────────────────── */
+head("Checkout");
+{
+  const post = (path, body, ip) =>
+    sp.request.post(`${BASE}${path}`, {
+      data: body,
+      headers: { "x-forwarded-for": `198.51.${ipRun}.${ip}` },
+    });
+
+  // The catalogue prices the order. A browser sends slugs and quantities; if it
+  // could send money, anyone could set their own.
+  const tampered = await post("/api/checkout", {
+    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: 1, priceCents: 1 }],
+    customer: { email: "a@b.co", name: "T", line1: "1 St", city: "K", postcode: "1", country: "PK" },
+  }, 210);
+  const tamperedBody = await tampered.json();
+  ok(
+    "a client-supplied price is ignored",
+    tampered.ok() && tamperedBody.total === 2400,
+    `total ${tamperedBody.total}`,
+  );
+
+  const unknown = await post("/api/checkout", {
+    lines: [{ slug: "no-such-product", variantId: "x", quantity: 1 }],
+    customer: { email: "a@b.co", name: "T", line1: "1 St", city: "K", postcode: "1", country: "PK" },
+  }, 211);
+  ok("an unknown product is refused", unknown.status() === 409);
+
+  const badQty = await post("/api/checkout", {
+    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: -5 }],
+    customer: { email: "a@b.co", name: "T", line1: "1 St", city: "K", postcode: "1", country: "PK" },
+  }, 212);
+  ok("a negative quantity is refused", badQty.status() === 400);
+
+  const badEmail = await post("/api/checkout", {
+    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: 1 }],
+    customer: { email: "nope", name: "T", line1: "1 St", city: "K", postcode: "1", country: "PK" },
+  }, 213);
+  ok("an invalid email is refused server-side", badEmail.status() === 400);
+
+  const quote = await post("/api/checkout/quote", {
+    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: 2, priceCents: 1 }],
+  }, 214);
+  const q = await quote.json();
+  ok("the quote prices from the catalogue", q.subtotalCents === 3600, `subtotal ${q.subtotalCents}`);
+  ok(
+    "shipping is charged below the threshold",
+    q.shippingCents === q.flatShippingCents && q.subtotalCents < q.freeShippingOverCents,
+    `subtotal ${q.subtotalCents}, shipping ${q.shippingCents}`,
+  );
+
+  const big = await post("/api/checkout/quote", {
+    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: 5 }],
+  }, 215);
+  const b = await big.json();
+  ok(
+    "shipping is free above the threshold",
+    b.subtotalCents >= b.freeShippingOverCents && b.shippingCents === 0,
+    `subtotal ${b.subtotalCents}, shipping ${b.shippingCents}`,
+  );
+}
+
 /* 5 ── Reduced motion --------------------------------------------------- */
 head("prefers-reduced-motion");
 const rm = await freshContext(browser, { reducedMotion: "reduce" });
