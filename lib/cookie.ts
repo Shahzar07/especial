@@ -8,16 +8,51 @@
  */
 import { GATE_MAX_AGE } from "./config";
 
+/**
+ * Signing key for the gate cookie.
+ *
+ * A real deployment sets GATE_SECRET and this uses it. When it is absent the
+ * gate does NOT break: it falls back to a fixed value below and warns once.
+ *
+ * That is a deliberate trade. This cookie is a mailing-list capture, not an
+ * access control — the middleware already waves every search and social
+ * crawler straight through on a spoofable User-Agent, and the spec is explicit
+ * that nothing sensitive may sit behind it. Against that threat model, a
+ * forgeable cookie is a far smaller problem than a storefront whose front door
+ * returns a 500 to every customer because one environment variable is missing.
+ *
+ * An earlier version threw instead, and a bootstrap script wired to npm's
+ * predev/prestart hooks was supposed to prevent that. It does not survive
+ * contact with reality: pnpm and yarn do not run those hooks, and neither does
+ * a Docker CMD, a platform that runs `next start` itself, or anyone invoking
+ * `next dev` directly. The signing path has to stand on its own.
+ */
+const UNCONFIGURED_FALLBACK =
+  "especial-gallery-unconfigured-gate-key-set-GATE_SECRET-in-your-environment";
+
+let warned = false;
+
 function secret(): string {
-  const s = process.env.GATE_SECRET;
-  if (!s || s.length < 16) {
-    throw new Error(
-      "GATE_SECRET is missing or shorter than 16 characters, so the gate " +
-        "cookie cannot be signed. Run `npm run setup` to generate one for " +
-        "local development, or set GATE_SECRET in the deployment environment.",
+  const configured = process.env.GATE_SECRET;
+  if (configured && configured.length >= 16) return configured;
+
+  if (!warned) {
+    warned = true;
+    console.warn(
+      [
+        "",
+        "  [gate] GATE_SECRET is not set (or is shorter than 16 characters).",
+        "         The gate still works, but the cookie is signed with a public",
+        "         value from the source, so its signature proves nothing and",
+        "         anyone could forge it.",
+        "",
+        "         Fix: set GATE_SECRET in the environment, or run `npm run setup`",
+        "         locally to generate one.",
+        "",
+      ].join("\n"),
     );
   }
-  return s;
+  return UNCONFIGURED_FALLBACK;
 }
 
 async function key(): Promise<CryptoKey> {

@@ -17,12 +17,23 @@ generated `GATE_SECRET` when one is missing. It never overwrites an existing
 file and does nothing when `GATE_SECRET` is already in the environment, which is
 how a real deployment supplies it — see `.env.example` for every variable.
 
-**Production must set `GATE_SECRET` itself.** The gate cookie is signed with it;
-without one the site renders and the gate renders, and then the first
-submission fails. That used to surface as a bare 500 with an empty body and an
-unexplained "Something went wrong on our end" in the browser. The route now
-always answers with JSON, logs the real cause, and echoes it to the browser
-console outside production.
+### GATE_SECRET
+
+Set it in production. The gate cookie is signed with it.
+
+**A missing one no longer breaks the gate.** It falls back to a fixed value in
+the source and warns once on the server. That is deliberate: this cookie is a
+mailing-list capture, not an access control — the middleware already waves every
+crawler through on a spoofable User-Agent — so a forgeable cookie is a much
+smaller problem than a storefront whose front door 500s at every customer
+because one variable is missing.
+
+It used to throw, which surfaced as a bare 500 with an empty body and an
+unexplained "Something went wrong on our end." The bootstrap script above was
+meant to prevent that, and it is not enough on its own: **pnpm and yarn do not
+run npm's `pre*` hooks**, and neither does a Docker `CMD`, a platform that runs
+`next start` for you, or anyone invoking `next dev` directly. The signing path
+now stands on its own, and the route always answers with JSON regardless.
 
 ---
 
