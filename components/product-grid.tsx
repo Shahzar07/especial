@@ -2,10 +2,14 @@ import { ProductCard } from "./product-card";
 import type { Product } from "@/lib/types";
 
 /**
- * 2-up mobile, 3-up tablet, 4-up desktop — layout.grid.products.
+ * The product grid.
  *
- * A short set drops to 2-up on desktop instead: four columns holding two
- * objects reads as a page that failed to load, not as restraint.
+ * Columns come from a minimum tile width rather than a fixed count, so the
+ * layout is driven by how wide a product should be rather than by how many
+ * happen to exist. A fixed count breaks at both ends of the catalogue: two
+ * products in a two-column grid rendered each one half the page wide and
+ * roughly 900px tall, which is what a single item on a category page looked
+ * like. This keeps a tile the same size whether the page holds one or twenty.
  */
 export function ProductGrid({
   products,
@@ -14,26 +18,19 @@ export function ProductGrid({
   products: Product[];
   priorityCount?: number;
 }) {
-  const short = products.length <= 2;
-
   return (
     <div
-      className={
-        short
-          ? "grid grid-cols-1 sm:grid-cols-2"
-          : "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-      }
-      style={{ gap: "var(--grid-gap)" }}
+      className="grid"
+      style={{
+        gap: "var(--grid-gap)",
+        gridTemplateColumns: "repeat(auto-fill, minmax(min(100%, 260px), 1fr))",
+      }}
     >
       {products.map((product, i) => (
         <ProductCard
           key={product.slug}
           product={product}
-          sizes={
-            short
-              ? "(min-width: 640px) 50vw, 100vw"
-              : "(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
-          }
+          sizes="(min-width: 1280px) 25vw, (min-width: 768px) 33vw, 50vw"
           priority={i < priorityCount}
         />
       ))}

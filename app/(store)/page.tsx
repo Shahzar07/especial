@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
+import { CategoryGrid } from "@/components/category-grid";
 import { SectionHeading } from "@/components/section-heading";
 import { FeatureGrid, SpecTable, type Feature } from "@/components/feature-grid";
 import {
@@ -13,7 +14,7 @@ import {
   IconReturn,
   IconShip,
 } from "@/components/icons";
-import { categories, site } from "@/lib/config";
+import { site } from "@/lib/config";
 import { getFeatured, lookbook } from "@/data/products";
 import banners from "@/data/banners.json";
 
@@ -171,34 +172,11 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 4 — Category blocks */}
+        {/* 4 — Categories */}
         <section className="mt-11">
           <SectionHeading title="Categories" />
-          <div
-            className="mt-6 grid grid-cols-1 sm:grid-cols-2"
-            style={{ gap: "var(--grid-gap)" }}
-          >
-            {categories.map((category) => (
-              <Link
-                key={category.slug}
-                href={`/${category.slug}`}
-                className="group relative block"
-              >
-                <div className="relative aspect-[4/3] w-full bg-wash">
-                  <Image
-                    src={`/products/category-${category.slug}.jpg`}
-                    alt=""
-                    aria-hidden
-                    fill
-                    sizes="(min-width: 640px) 50vw, 100vw"
-                    className="object-cover"
-                  />
-                </div>
-                <h3 className="absolute bottom-0 left-0 p-5 text-sm tracking-[var(--tracking-wide)] text-ink">
-                  <span className="link-underline">{category.title}</span>
-                </h3>
-              </Link>
-            ))}
+          <div className="mt-6">
+            <CategoryGrid />
           </div>
         </section>
 

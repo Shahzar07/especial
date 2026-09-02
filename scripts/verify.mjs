@@ -33,6 +33,9 @@ const head = (t) => console.log(`\n── ${t} ──`);
 async function passGate(page, email) {
   await page.goto(`${BASE}/gate`, { waitUntil: "domcontentloaded" });
   await page.waitForSelector("#gate-email", { timeout: 20000 });
+  // Let React hydrate. Clicking first submits the no-JS server-action form,
+  // which works but navigates differently and makes the wait below flaky.
+  await page.waitForTimeout(1200);
   await page.fill("#gate-email", email);
   await page.click('button[type="submit"]');
   await page.waitForFunction(() => !location.pathname.startsWith("/gate"), null, {

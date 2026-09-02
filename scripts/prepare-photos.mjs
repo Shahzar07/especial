@@ -257,11 +257,35 @@ async function build({
 
   const C = info.channels;
   const corrected = Buffer.alloc(W * H * 3);
+
+  /**
+   * Anything within this many levels of the target on every channel is snapped
+   * to exactly the target.
+   *
+   * The quadratic models the illumination well but not perfectly, and JPEG adds
+   * its own noise, so the corrected backdrop landed 6-7 levels off. On a
+   * near-white ground that is plainly visible as a faint grey rectangle around
+   * the object — which is exactly what the crop is. Snapping the residual makes
+   * the backdrop bit-identical to the frame, so no rectangle can exist.
+   *
+   * The tolerance is far below anything in the objects themselves: the darkest
+   * background pixel is orders away from a black moulded outline, a pink bone
+   * or a yellow enamel lobe. It only reaches blown highlights on chrome, which
+   * are white already.
+   */
+  const SNAP = 12;
   for (let i = 0, p = 0, q = 0; i < W * H; i++, p += C, q += 3) {
+    let near = true;
     for (let c = 0; c < 3; c++) {
-      const f = field[q + c];
-      const v = (srcPx[p + c] * target[c]) / f;
-      corrected[q + c] = v > 255 ? 255 : v < 0 ? 0 : v;
+      const v = (srcPx[p + c] * target[c]) / field[q + c];
+      const clamped = v > 255 ? 255 : v < 0 ? 0 : v;
+      corrected[q + c] = clamped;
+      if (Math.abs(clamped - target[c]) > SNAP) near = false;
+    }
+    if (near) {
+      corrected[q] = target[0];
+      corrected[q + 1] = target[1];
+      corrected[q + 2] = target[2];
     }
   }
 
@@ -437,7 +461,7 @@ async function composeBanner({ out, width, height, ground = "#000000", placement
 
 const TILE = { width: 1400, height: 1750 };   // 4:5, every product image
 const BANNER = { width: 2560, height: 1440 }; // 16:9, home hero
-const BLOCK = { width: 1800, height: 1350 };  // 4:3, category blocks
+const SQUARE = { width: 1100, height: 1100 }; // 1:1, category cells
 
 /**
  * Tiles sit on paper, exactly as the design system asks — the object with
@@ -552,13 +576,17 @@ const banners = {
 await writeFile("data/banners.json", JSON.stringify(banners, null, 2) + "\n");
 console.log("  data/banners.json written");
 
+// Square, and deliberately not the same fit box for both: the keychain is wide
+// with outstretched arms while the pin is compact, so an identical box makes
+// the pin read far heavier. These are tuned so the two carry equal weight
+// sitting side by side.
 await build({
-  src: "keychain-front.jpg", out: "category-keychains.jpg", ...BLOCK,
-  fit: [0.62, 0.68], anchor: [0.5, 0.42], bg: WASH,
+  src: "keychain-front.jpg", out: "category-keychains.jpg", ...SQUARE,
+  fit: [0.78, 0.72], anchor: [0.5, 0.5], bg: WASH,
 });
 await build({
-  src: "pin-front.jpg", out: "category-pins.jpg", ...BLOCK,
-  fit: [0.46, 0.62], anchor: [0.5, 0.42], bg: WASH,
+  src: "pin-front.jpg", out: "category-pins.jpg", ...SQUARE,
+  fit: [0.6, 0.6], anchor: [0.5, 0.5], bg: WASH,
 });
 
 console.log("\nDone.");

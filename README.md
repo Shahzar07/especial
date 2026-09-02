@@ -90,7 +90,14 @@ flat-fields instead:
    exactly that value everywhere, the lilac cast goes with it (the field is
    per-channel), and the object keeps its own shading because only
    low-frequency content is removed.
-3. **Crop to the object**, found as the largest connected component of the mask
+3. **Snap the residual.** The quadratic models the light well but not exactly,
+   and JPEG adds its own noise, so the corrected backdrop still landed 6-7
+   levels off — plainly visible on a near-white ground as a faint grey
+   rectangle around the object, which is exactly what the crop is. Anything
+   within 12 levels of the target on every channel is snapped to the target, so
+   the backdrop is bit-identical to the frame and no rectangle can exist. The
+   tolerance sits far below anything in the objects themselves.
+4. **Crop to the object**, found as the largest connected component of the mask
    — a global bounding box would span the pin *and* the butterfly clutch lying
    loose beside it, scaling the pin down to nothing — then place it in the frame
    at a fixed size, so every tile reads at the same weight however far away the
@@ -126,6 +133,22 @@ name serves the *old* image until that cache is cleared — `rm -rf
 .next/cache/images`. Production builds start clean, so this only bites locally.
 
 ---
+
+## Grids
+
+Both the product grid and the category cells take their column count from a
+minimum tile width — `repeat(auto-fill, minmax(min(100%, 260px), 1fr))` — rather
+than a fixed count per breakpoint. A fixed count breaks at both ends of a small
+catalogue: two products in a two-column grid rendered each one half the page
+wide and about 900px tall, and a category page holding a single item showed one
+enormous tile. Driving it from tile width keeps a product the same size whether
+a page holds one or twenty.
+
+Category cells are compact hairline boxes — square image over a ruled caption
+with the item count — on that same rhythm, so the categories and the products
+read as one page. With only a few categories the row is capped to their own
+width so it does not trail off into empty tracks; the cap lifts on its own once
+there are enough to fill the width.
 
 ## Structure over prose
 

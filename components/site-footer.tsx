@@ -26,7 +26,7 @@ const COLUMNS = [
 
 export function SiteFooter() {
   return (
-    <footer className="mt-11 border-t border-rule">
+    <footer className="mt-10 border-t border-rule">
       <div className="mx-auto max-w-[var(--max-width)] px-[var(--gutter)] py-8">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {COLUMNS.map((column) => (
