@@ -7,10 +7,22 @@ store behind it — home, category listing, product detail and cart — revealed
 after submission and remembered for 180 days.
 
 ```bash
-cp .env.example .env.local     # then set GATE_SECRET
 npm install
-npm run dev
+npm run dev          # writes .env.local with a generated GATE_SECRET on first run
 ```
+
+That is the whole setup. `npm run dev` and `npm start` both run
+`scripts/ensure-env.mjs` first, which creates `.env.local` with a freshly
+generated `GATE_SECRET` when one is missing. It never overwrites an existing
+file and does nothing when `GATE_SECRET` is already in the environment, which is
+how a real deployment supplies it — see `.env.example` for every variable.
+
+**Production must set `GATE_SECRET` itself.** The gate cookie is signed with it;
+without one the site renders and the gate renders, and then the first
+submission fails. That used to surface as a bare 500 with an empty body and an
+unexplained "Something went wrong on our end" in the browser. The route now
+always answers with JSON, logs the real cause, and echoes it to the browser
+console outside production.
 
 ---
 
@@ -216,9 +228,15 @@ persistence across tabs and refreshes, re-gating after a clear, the crawler
 allowlist, and — at 320 / 768 / 1440 / 2560 across five routes — no computed
 `border-radius` over 2px, no `box-shadow`, no font weight over 600, no display
 serif under 32px, and no horizontal overflow. Plus the cart drawer and
-`prefers-reduced-motion`.
+`prefers-reduced-motion`, and that `/api/subscribe` always answers with a
+parseable JSON body whatever happens to it.
 
-Last run: **19 passed, 0 failed.**
+The suite is hermetic: the gate is rate limited to five submissions per ten
+minutes per IP, so each browser context carries its own `X-Forwarded-For` drawn
+from a range randomised per run. Without that, a second run inside the window
+gets throttled and reports as though the cookie had stopped working.
+
+Last run: **22 passed, 0 failed**, three times consecutively.
 
 ---
 

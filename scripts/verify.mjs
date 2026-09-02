@@ -51,14 +51,18 @@ async function passGate(page, email) {
  * limiter itself.
  */
 let ipCounter = 0;
+// Randomised per run as well as per context. A counter alone restarts from the
+// same address every run, so consecutive runs inside the ten-minute window
+// land on the same buckets and the later ones get throttled — which reads as a
+// broken cookie rather than as the limiter doing its job.
+const ipRun = Math.floor(Math.random() * 250);
 function freshContext(browser, options = {}) {
   ipCounter += 1;
-  const n = ipCounter;
   return browser.newContext({
     ...options,
     extraHTTPHeaders: {
       ...(options.extraHTTPHeaders ?? {}),
-      "x-forwarded-for": `198.51.100.${(n % 250) + 1}`,
+      "x-forwarded-for": `198.51.${ipRun}.${(ipCounter % 250) + 1}`,
     },
   });
 }
@@ -168,6 +172,36 @@ await sp.keyboard.press("Escape");
 await sp.waitForTimeout(800);
 const closed = await drawerState();
 ok("Escape closes and restores inert", !closed.on && closed.inert);
+
+/* 4b ── The endpoint always answers with JSON ────────────────────────────── */
+head("Subscribe endpoint is always parseable");
+{
+  // The reported failure was a bare 500 with an empty body when GATE_SECRET was
+  // missing: the client's res.json() threw and the visitor saw only a generic
+  // apology. Whatever happens, this must come back as JSON.
+  const probes = [
+    ["valid", { email: `probe-${Date.now()}@example.com`, next: "/" }],
+    ["invalid email", { email: "nope", next: "/" }],
+    ["missing field", {}],
+  ];
+  for (const [label, body] of probes) {
+    const res = await sp.request.post(`${BASE}/api/subscribe`, {
+      data: body,
+      headers: { "x-forwarded-for": `198.51.${ipRun}.200` },
+    });
+    let parsed = null;
+    try {
+      parsed = await res.json();
+    } catch {
+      /* left null — that is the failure */
+    }
+    ok(
+      `${label}: JSON body (${res.status()})`,
+      parsed !== null && typeof parsed === "object",
+      parsed ? "" : "unparseable body",
+    );
+  }
+}
 
 /* 5 ── Reduced motion --------------------------------------------------- */
 head("prefers-reduced-motion");

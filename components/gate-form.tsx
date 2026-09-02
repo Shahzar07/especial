@@ -55,9 +55,17 @@ export function GateForm({ next }: { next: string }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: email.trim(), next }),
       });
-      const data = (await res.json()) as { redirect?: string; error?: string };
+      const data = (await res.json()) as {
+        redirect?: string;
+        error?: string;
+        reason?: string;
+      };
 
       if (!res.ok) {
+        // `reason` is only ever sent outside production — it names a server
+        // misconfiguration, which is worth seeing while developing and is
+        // never shown to a real visitor.
+        if (data.reason) console.error(`[gate] ${data.reason}`);
         setError(data.error ?? GENERIC_ERROR);
         setStatus("idle");
         return;

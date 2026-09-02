@@ -12,7 +12,9 @@ function secret(): string {
   const s = process.env.GATE_SECRET;
   if (!s || s.length < 16) {
     throw new Error(
-      "GATE_SECRET is missing or too short (min 16 chars). Set it in .env.local.",
+      "GATE_SECRET is missing or shorter than 16 characters, so the gate " +
+        "cookie cannot be signed. Run `npm run setup` to generate one for " +
+        "local development, or set GATE_SECRET in the deployment environment.",
     );
   }
   return s;
