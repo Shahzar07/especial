@@ -8,16 +8,16 @@ export const site = {
   wordmark: "ESPECIAL GALLERY",
   tagline: "Objects for people who look twice.",
   description:
-    "Especial Gallery makes small-run collectible objects — glow keychains, figures and prints — produced in numbered drops and sold direct.",
+    "Especial Gallery makes small-run collectible objects — soft PVC keychains and hard enamel pins — produced in short runs and sold direct.",
+  // Confirmed by the printed backing card the pin ships on.
   domain: process.env.NEXT_PUBLIC_SITE_URL ?? "https://especialgallery.com",
   email: "hello@especialgallery.com",
 } as const;
 
+/** Only categories we actually stock. Add one here and it appears everywhere. */
 export const categories = [
   { slug: "keychains", title: "Keychains" },
-  { slug: "figures", title: "Figures" },
-  { slug: "prints", title: "Prints" },
-  { slug: "apparel", title: "Apparel" },
+  { slug: "pins", title: "Pins" },
 ] as const;
 
 export type CategorySlug = (typeof categories)[number]["slug"];

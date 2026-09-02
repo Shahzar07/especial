@@ -14,28 +14,91 @@ npm run dev
 
 ---
 
-## Decisions taken where the spec left a blank
+## The catalogue is real
 
-`BUILDPROMPT.md` shipped with `{{...}}` placeholders. These are the values used;
-each is a one-file change.
+Two products, both photographed:
+
+| Product | Category | Frames |
+|---|---|---|
+| Skeleton Keychain | Keychains | front, polybag, black reverse |
+| Brain Pin | Pins | front, backing card, reverse with clutch |
+
+Three greyscale frames of the keychain carry the home page's lookbook strip.
+
+Everything factual on those pages — materials, construction, hardware, finish,
+colours, packaging — was read off the photographs. **Prices and dimensions were
+not visible in them and are placeholders.** See "Before you launch".
+
+### There is no "Glow" colourway
+
+An earlier draft listed one, inferred from three greyscale frames. Measuring
+them settled it: those frames carry *exactly* 0.0 saturation in every pixel,
+which is impossible for a colour photograph of a real grey object. They are
+black-and-white treatments of the same green-and-pink keychain, so they became
+the lookbook rather than a second variant.
+
+---
+
+## Photography pipeline
+
+`photos/source/` is the master. `public/products/` is generated — never edit it
+by hand. Re-run after any change to a source frame:
+
+```bash
+npm run photos
+```
+
+The gallery layout puts product imagery straight onto the page with no card, no
+border and no shadow. That only works if the photograph's own backdrop is
+indistinguishable from the page, and none of these frames started that way: each
+was shot on grey seamless at roughly 190–240 luminance, with a lilac cast and
+visible vignetting — brighter under the light in the middle than at the corners.
+
+A single global multiplier cannot fix that. It can land the corners on the
+target or the middle on the target, but not both, and either way the crop shows
+up as a pale rectangle floating on the page. So `scripts/prepare-photos.mjs`
+flat-fields instead:
+
+1. **Fit the illumination.** A least-squares quadratic surface — vignetting is
+   second-order — is fitted per channel to the *background pixels only*, with
+   the object masked out and the mask dilated so no soft edge leaks in. The
+   model never sees the object, so it carries no bias from it.
+2. **Divide it out** and multiply up to the target ground. The backdrop lands on
+   exactly that value everywhere, the lilac cast goes with it (the field is
+   per-channel), and the object keeps its own shading because only
+   low-frequency content is removed.
+3. **Crop to the object**, found as the largest connected component of the mask
+   — a global bounding box would span the pin *and* the butterfly clutch lying
+   loose beside it, scaling the pin down to nothing — then place it in the frame
+   at a fixed size, so every tile reads at the same weight however far away the
+   original was shot.
+
+Tiles sit on paper, as the design system asks. Banners use the `wash` token: a
+full-bleed white frame on a white page has no edge at all, so the hero would
+read as an object floating in undefined space rather than as a composition.
+`wash` is a tonal band, not a card — still no border, no radius, no shadow.
+
+---
+
+## Decisions taken where the spec left a blank
 
 | Placeholder | Resolved to | Where |
 |---|---|---|
 | `{{BRAND}}` | Especial Gallery | `lib/config.ts` |
 | `{{TAGLINE}}` | "Objects for people who look twice." | `lib/config.ts` |
-| `{{CATEGORIES}}` | Keychains, Figures, Prints, Apparel | `lib/config.ts` |
-| `{{ESP}}` | Pluggable adapter — Resend / Klaviyo / Mailchimp | `lib/esp.ts` |
+| `{{CATEGORIES}}` | Keychains, Pins | `lib/config.ts` |
+| `{{ESP}}` | Adapter — Resend / Klaviyo / Mailchimp | `lib/esp.ts` |
 | `{{COMMERCE}}` | Static `data/products.ts` behind a `Product` type | `data/products.ts` |
-| `{{DOMAIN}}` | `especialgallery.com` | `lib/config.ts` / `NEXT_PUBLIC_SITE_URL` |
+| `{{DOMAIN}}` | `especialgallery.com` — confirmed by the pin's backing card | `lib/config.ts` |
 
 The ESP was left open rather than guessed, so `lib/esp.ts` is an adapter with
-three implementations selected by `ESP_PROVIDER`. With `none` the gate still
-works end to end and logs the address, so nothing blocks on credentials.
+three implementations selected by `ESP_PROVIDER`. With `none` the gate works end
+to end and logs the address, so nothing blocks on credentials.
 
 ### Two deviations, both deliberate
 
-**Fonts.** `design.ts` specifies Switzer + Editorial New from Fontshare, which
-is not reachable from this build environment. The build ships `design.ts`'s own
+**Fonts.** `design.ts` specifies Switzer + Editorial New from Fontshare, which is
+not reachable from this build environment. The build ships `design.ts`'s own
 sanctioned substitute — Instrument Sans + Instrument Serif — **self-hosted as
 `.woff2` via `next/font/local`**, not from Google's CDN, so the "no CDN, no
 FOUT" rule still holds. To switch: drop `Switzer-Variable.woff2` and
@@ -45,49 +108,16 @@ paths in `lib/fonts.ts`. Nothing else changes — every consumer reads
 
 **Editorial subheads.** §5 asks for editorial `h2`s in the display serif at
 31px; `design.ts` says the serif is never used below 32px. `design.ts` is
-declared the single source of truth, so the editorial block uses `text-4xl`
-for its `h2` and `text-3xl` for its `h3`s — both above the floor, and with
-clearer hierarchy than one flat size.
+declared the single source of truth, so the editorial block uses `text-4xl` for
+its `h2` and `text-3xl` for its `h3`s — both above the floor, with clearer
+hierarchy than one flat size.
 
 ### One token added
 
-`z.scrim: 30` in `design.ts`. The cart drawer's dimming scrim has to sit
-*below* the drawer panel; with the scrim at `z.overlay` (50) and the panel at
-`z.drawer` (40) the scrim covered the panel and swallowed every click inside
-it. `z.overlay` keeps its meaning: something that covers a drawer.
-
----
-
-## Product photography
-
-**The five supplied product photographs are not in this repo** — they were
-attached to the conversation as images and never landed on disk, so they could
-not be committed. Every slot that expects one currently holds a generated
-placeholder that names the file it is waiting for.
-
-Drop the real photographs into `public/products/` under exactly these names and
-they appear on the gate, the grid and the PDP with no code change:
-
-| File | Which photo |
-|---|---|
-| `skeleton-keychain-front.jpg` | Front, green body / pink bones |
-| `skeleton-keychain-back.jpg` | Solid black moulded reverse |
-| `skeleton-keychain-packaged.jpg` | Sealed in its polybag |
-| `skeleton-keychain-glow-front.jpg` | Glow colourway, front |
-| `skeleton-keychain-glow-packaged.jpg` | Glow colourway, polybag |
-
-Shoot or crop to **4:5** (1200×1500 or larger). `hero.jpg` is **16:9**, and
-`category-*.jpg` are **4:3**.
-
-Everything in `data/products.ts` below the `PLACEHOLDER CATALOGUE` comment is
-invented so the rails and grids render at realistic density. None of it is a
-real product — replace or delete it before launch.
-
-The `Glow` variant on the keychain is **inferred** from the two greyscale
-photographs. If those are simply black-and-white shots of the same colourway
-rather than a separate run, delete that variant.
-
-Regenerate placeholders after changing the catalogue with `npm run gen:placeholders`.
+`z.scrim: 30` in `design.ts`. The cart drawer's dimming scrim has to sit *below*
+the drawer panel; with the scrim at `z.overlay` (50) and the panel at `z.drawer`
+(40) it covered the panel and swallowed every click inside it. `z.overlay` keeps
+its meaning: something that covers a drawer.
 
 ---
 
@@ -97,8 +127,8 @@ Regenerate placeholders after changing the catalogue with `npm run gen:placehold
 static metadata routes, the legal pages, and anything with a file extension.
 
 1. Valid `ml_pass` cookie → through.
-2. `?preview=$PREVIEW_TOKEN` → set the cookie, strip the param, continue.
-   Unset `PREVIEW_TOKEN` disables the bypass rather than allowing an empty match.
+2. `?preview=$PREVIEW_TOKEN` → set the cookie, strip the param, continue. Unset
+   `PREVIEW_TOKEN` disables the bypass rather than allowing an empty match.
 3. A search or social crawler (`lib/crawlers.ts`) → through. **Gating crawlers
    deletes organic traffic and breaks link unfurls**, which is why the editorial
    block on the home page can rank at all.
@@ -126,8 +156,8 @@ cannot drift:
 used as an open redirect. Rate limit is 5 attempts / 10 min per IP, in-process —
 swap `lib/rate-limit.ts` for Redis before running more than one instance.
 
-If the ESP write fails the visitor is **still admitted** and the failure is
-logged. A broken webhook must never trap a paying customer at the door.
+If the ESP write fails the visitor is **still admitted** and the failure logged.
+A broken webhook must never trap a paying customer at the door.
 
 ---
 
@@ -151,13 +181,19 @@ Last run: **19 passed, 0 failed.**
 
 ---
 
-## What is not built
+## Before you launch
 
-- **Payment.** `{{COMMERCE}}` was never resolved, so `/checkout` stops at a
-  handoff rather than pretending to take money. The cart already carries slug,
-  variant, quantity and price — everything Shopify's `cart/create` or Stripe's
-  `checkout.sessions.create` needs. See the note at the top of that file.
-- **Real inventory.** Stock is a boolean per variant in the static catalogue.
+- [ ] **Prices** — `data/products.ts`, both products. Currently placeholders.
+- [ ] **Dimensions** — neither product's size was visible in the photographs, so
+      no size is claimed on either page. Add one to `details`.
+- [ ] **Product name** — "Brain Pin" is descriptive, not confirmed. The backing
+      card carries no product name.
+- [ ] **Payment** — `{{COMMERCE}}` was never resolved, so `/checkout` stops at a
+      documented handoff rather than pretending to take money. The cart carries
+      slug, variant, quantity and price: everything Shopify's `cart/create` or
+      Stripe's `checkout.sessions.create` needs.
+- [ ] **Inventory** — stock is a boolean per variant in the static catalogue.
+- [ ] `GATE_SECRET` set to a real random value in production.
 
 ## Structure
 
@@ -172,8 +208,12 @@ lib/
   esp.ts               Resend / Klaviyo / Mailchimp adapter
   crawlers.ts          search + social allowlist
   fonts.ts             self-hosted woff2 via next/font/local
-data/products.ts       static catalogue + the accessors the app reads
+data/products.ts       the catalogue + the accessors the app reads
+photos/source/         master photographs — never referenced by the app
+public/products/       generated by npm run photos
 app/(store)/           everything behind the gate
 app/gate/              the gate, outside the store chrome
-scripts/verify.mjs     acceptance checks
+scripts/
+  prepare-photos.mjs   flat-field correction, cropping, encoding
+  verify.mjs           acceptance checks
 ```

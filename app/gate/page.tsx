@@ -17,16 +17,16 @@ export const metadata: Metadata = {
  */
 const GATE_IMAGES = [
   {
-    src: "/products/skeleton-keychain-front.jpg",
-    alt: "Especial Gallery Skeleton Keychain, green body with pink bones",
+    src: "/products/keychain-front.jpg",
+    alt: "Especial Gallery Skeleton Keychain, green figure with a pink skeleton",
   },
   {
-    src: "/products/skeleton-keychain-packaged.jpg",
-    alt: "Especial Gallery Skeleton Keychain sealed in its polybag",
+    src: "/products/pin-front.jpg",
+    alt: "Especial Gallery Brain Pin, yellow enamel with a pink spine",
   },
   {
-    src: "/products/skeleton-keychain-back.jpg",
-    alt: "Especial Gallery Skeleton Keychain, black moulded reverse",
+    src: "/products/keychain-reverse.jpg",
+    alt: "Reverse of the Especial Gallery Skeleton Keychain, moulded in solid black",
   },
 ] as const;
 

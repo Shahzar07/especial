@@ -1,18 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
-import { FeaturedRail } from "@/components/featured-rail";
-import { ProductGrid } from "@/components/product-grid";
+import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
 import { categories, site } from "@/lib/config";
-import { getFeatured, getNewest } from "@/data/products";
+import { getFeatured, lookbook } from "@/data/products";
 
 export default function HomePage() {
-  const featured = getFeatured(4);
-  const newest = getNewest(8);
+  const releases = getFeatured(4);
 
   return (
     <>
-      {/* 1 — Hero. One full-bleed 16:9 image, a single line of type bottom-left,
+      {/* 1 — Hero. One full-bleed 16:9 frame, a single line of type bottom-left,
              no CTA button. The whole thing is the link. */}
       <section>
         <Link href="/keychains" className="group relative block">
@@ -37,15 +35,25 @@ export default function HomePage() {
       </section>
 
       <div className="mx-auto max-w-[var(--max-width)] px-[var(--gutter)]">
-        {/* 2 — Featured rail */}
+        {/* 2 — The release. Two objects, given room. */}
         <section className="mt-9">
-          <SectionHeading title="Featured" href="/keychains" action="All products" />
-          <div className="mt-6">
-            <FeaturedRail products={featured} />
+          <SectionHeading title="Current release" />
+          <div
+            className="mt-6 grid grid-cols-1 sm:grid-cols-2"
+            style={{ gap: "var(--grid-gap)" }}
+          >
+            {releases.map((product, i) => (
+              <ProductCard
+                key={product.slug}
+                product={product}
+                sizes="(min-width: 640px) 50vw, 100vw"
+                priority={i === 0}
+              />
+            ))}
           </div>
         </section>
 
-        {/* 3 — Category blocks, 2-up on desktop */}
+        {/* 3 — Category blocks */}
         <section className="mt-11">
           <SectionHeading title="Categories" />
           <div
@@ -76,11 +84,30 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 4 — Newest grid */}
+        {/* 4 — Lookbook. The greyscale campaign frames, no captions, no links.
+               Purely the object, three times. */}
         <section className="mt-11">
-          <SectionHeading title="Latest" />
-          <div className="mt-6">
-            <ProductGrid products={newest} />
+          <SectionHeading title="Lookbook" />
+          <div
+            className="mt-6 grid grid-cols-2 sm:grid-cols-3"
+            style={{ gap: "var(--grid-gap)" }}
+          >
+            {lookbook.map((frame, i) => (
+              <div
+                key={frame.src}
+                className={`relative aspect-[4/5] bg-wash ${
+                  i === 2 ? "hidden sm:block" : ""
+                }`}
+              >
+                <Image
+                  src={frame.src}
+                  alt={frame.alt}
+                  fill
+                  sizes="(min-width: 640px) 33vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
+            ))}
           </div>
         </section>
 
@@ -96,8 +123,8 @@ export default function HomePage() {
             </h2>
 
             <p className="mt-6 text-base text-ink">
-              {site.brand} produces collectible objects in short, numbered runs.
-              Every release is made to a fixed quantity, sold direct, and not
+              {site.brand} produces collectible objects in short runs. Every
+              release is made to a fixed quantity, sold direct, and not
               reprinted. When a run is gone it stays gone, and the next one is a
               different object rather than the same one again in another colour.
             </p>
@@ -109,18 +136,18 @@ export default function HomePage() {
               and no reserved allocation. Stock is decremented at checkout, so
               what the grid shows is what is actually left. Items marked sold out
               are not restocked; if a run returns it is because the piece has been
-              remade, and it is listed as a new release with its own edition size.
+              remade, and it is listed as a new release with its own run size.
             </p>
 
             <h3 className="display mt-8 text-3xl text-ink">Materials and making</h3>
             <p className="mt-4 text-base text-ink">
-              Keychains and figures are moulded in soft PVC and vinyl from
-              hand-built masters, then finished and assembled in small batches.
-              Prints are screen printed on heavyweight uncoated stock and
-              numbered by hand. Apparel is printed on heavyweight cotton. Each
-              product page lists the material, the finished dimensions and the
-              edition size, and nothing else — the object should make its own
-              argument.
+              Keychains are moulded in soft PVC from hand-built masters, printed
+              on the face and left flat black on the reverse, then finished and
+              assembled in small batches with nickel-plated hardware. Pins are
+              struck in metal and filled with hard enamel, polished flat, and
+              mounted on printed backing card. Each product page lists the
+              material, the construction and the finished dimensions, and nothing
+              else — the object should make its own argument.
             </p>
 
             <h3 className="display mt-8 text-3xl text-ink">
