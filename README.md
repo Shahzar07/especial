@@ -262,7 +262,7 @@ minutes per IP, so each browser context carries its own `X-Forwarded-For` drawn
 from a range randomised per run. Without that, a second run inside the window
 gets throttled and reports as though the cookie had stopped working.
 
-Last run: **31 passed, 0 failed**.
+Last run: **34 passed, 0 failed**.
 
 ---
 

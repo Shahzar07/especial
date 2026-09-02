@@ -296,6 +296,42 @@ head("Product tiles survive hover");
   ok("no tile is left with every image transparent", !anyBlank);
 }
 
+/* 4e ── Header controls ──────────────────────────────────────────────────── */
+head("Header controls");
+{
+  await sp.goto(`${BASE}/`, { waitUntil: "domcontentloaded" });
+  await sp.waitForTimeout(1200);
+
+  const header = await sp.evaluate(() => {
+    const bag = document.querySelector("header button");
+    const account = document.querySelector("header a[aria-label]");
+    const box = (el) => {
+      const r = el.getBoundingClientRect();
+      return { w: Math.round(r.width), h: Math.round(r.height) };
+    };
+    return {
+      bagLabel: bag?.getAttribute("aria-label") ?? "",
+      bagBox: bag ? box(bag) : null,
+      accountLabel: account?.getAttribute("aria-label") ?? "",
+      accountBox: account ? box(account) : null,
+      // Icons carry no text, so the label is the only thing a screen reader has.
+      bagHasIcon: Boolean(bag?.querySelector("svg")),
+      accountHasIcon: Boolean(account?.querySelector("svg")),
+    };
+  });
+
+  ok("the bag is an icon with a spoken label", header.bagHasIcon && /bag/i.test(header.bagLabel), header.bagLabel);
+  ok("the account is an icon with a spoken label", header.accountHasIcon && /account/i.test(header.accountLabel), header.accountLabel);
+
+  const TAP = 44; // the accessible minimum for a finger
+  ok(
+    "both controls meet the 44px tap target",
+    header.bagBox.h >= TAP && header.bagBox.w >= TAP &&
+      header.accountBox.h >= TAP && header.accountBox.w >= TAP,
+    `bag ${header.bagBox.w}x${header.bagBox.h}, account ${header.accountBox.w}x${header.accountBox.h}`,
+  );
+}
+
 /* 5 ── Reduced motion --------------------------------------------------- */
 head("prefers-reduced-motion");
 const rm = await freshContext(browser, { reducedMotion: "reduce" });
