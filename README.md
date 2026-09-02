@@ -78,7 +78,34 @@ full-bleed white frame on a white page has no edge at all, so the hero would
 read as an object floating in undefined space rather than as a composition.
 `wash` is a tonal band, not a card — still no border, no radius, no shadow.
 
+The hero is art-directed: `hero.jpg` (16:9) for desktop with the type set into
+its empty lower left, and `hero-mobile.jpg` (4:5) with the type set *below* it.
+Cropping the wide banner to a portrait viewport cut the object in half and ran
+the headline straight across it.
+
+**Dev gotcha.** Next caches optimised images in `.next/cache/images`, keyed on
+the request URL. Replacing a file in `public/products/` without changing its
+name serves the *old* image until that cache is cleared — `rm -rf
+.next/cache/images`. Production builds start clean, so this only bites locally.
+
 ---
+
+## Structure over prose
+
+The home page carries two ruled blocks — "How we work" and "Ordering" — plus a
+specification table, in place of what was four paragraphs of running text.
+
+They are built from hairlines, not cards: the container takes the rule colour,
+the cells take paper, and the 1px grid gap lets the ground show through as the
+dividing line. So the block reads as a ruled table rather than a row of panels,
+and it needs no radius, no shadow and no fill to hold together — which is what
+keeps it inside a system that forbids all three. Icons are 1px-stroke line
+drawings on a 24 grid inheriting `currentColor`, so they never introduce a
+second accent.
+
+The long-form copy stays underneath. The ruled blocks serve the reader who
+scans; the prose serves the search engine, which is the whole point of the
+editorial section.
 
 ## Decisions taken where the spec left a blank
 

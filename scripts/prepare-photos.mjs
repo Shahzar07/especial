@@ -335,9 +335,20 @@ await build({ src: "keychain-mono-packaged.jpg", out: "lookbook-02.jpg", ...TILE
 await build({ src: "keychain-mono-reverse.jpg", out: "lookbook-03.jpg", ...TILE, bg: WASH, mono: true });
 
 console.log("Banners");
+// Hero: the colour object, large, on the right so the lower left stays clear
+// for the type block the page sets into it. The greyscale frames are stronger
+// as a lookbook than as the first thing anyone sees — the green and pink is
+// what makes this object worth looking at twice.
 await build({
-  src: "keychain-mono-front.jpg", out: "hero.jpg", ...BANNER,
-  fit: [0.42, 0.82], anchor: [0.66, 0.46], bg: WASH, mono: true,
+  src: "keychain-front.jpg", out: "hero.jpg", ...BANNER,
+  fit: [0.40, 0.80], anchor: [0.70, 0.46], bg: WASH,
+});
+// Mobile hero is a separate crop, not the 16:9 one squeezed. Cropping the wide
+// banner to a portrait viewport cuts the object in half; and on mobile the type
+// sits below the image rather than over it, so the object can be centred.
+await build({
+  src: "keychain-front.jpg", out: "hero-mobile.jpg",
+  width: 1200, height: 1500, fit: [0.86, 0.62], anchor: [0.5, 0.48], bg: WASH,
 });
 await build({
   src: "keychain-front.jpg", out: "category-keychains.jpg", ...BLOCK,

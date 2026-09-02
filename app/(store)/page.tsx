@@ -2,19 +2,98 @@ import Image from "next/image";
 import Link from "next/link";
 import { ProductCard } from "@/components/product-card";
 import { SectionHeading } from "@/components/section-heading";
+import { FeatureGrid, SpecTable, type Feature } from "@/components/feature-grid";
+import {
+  IconDirect,
+  IconDrop,
+  IconEdition,
+  IconHand,
+  IconMail,
+  IconMaterial,
+  IconReturn,
+  IconShip,
+} from "@/components/icons";
 import { categories, site } from "@/lib/config";
 import { getFeatured, lookbook } from "@/data/products";
+
+const HOW_WE_WORK: Feature[] = [
+  {
+    icon: <IconEdition />,
+    title: "Fixed runs",
+    body: "Every release is made to a set quantity and not reprinted. When a run is gone it stays gone.",
+  },
+  {
+    icon: <IconDrop />,
+    title: "One drop time",
+    body: "Releases go live for everyone at once. No queue, no raffle, no reserved allocation.",
+  },
+  {
+    icon: <IconDirect />,
+    title: "Sold direct",
+    body: "Straight from the studio to you. No resellers, no distributors, no marked-up middle.",
+  },
+  {
+    icon: <IconHand />,
+    title: "Finished by hand",
+    body: "Moulded and struck in small batches, then checked and assembled one at a time.",
+  },
+];
+
+const BUYING: Feature[] = [
+  {
+    icon: <IconShip />,
+    title: "Ships in two days",
+    body: "Tracked from our own studio. Shipping is calculated at checkout.",
+  },
+  {
+    icon: <IconReturn />,
+    title: "Thirty-day returns",
+    body: "Unopened items come back for a full refund. Opened ones if they arrived damaged.",
+  },
+  {
+    icon: <IconMaterial />,
+    title: "Materials listed",
+    body: "Every product page states what it is made of and how it was made. Nothing else.",
+  },
+  {
+    icon: <IconMail />,
+    title: "List gets it first",
+    body: "Drops are announced to the mailing list before they appear anywhere else.",
+  },
+];
+
+const SPECS: [string, string][] = [
+  ["Keychain", "Soft moulded PVC, two-sided, raised outline, flat black reverse"],
+  ["Keychain hardware", "Nickel-plated split ring and short chain"],
+  ["Pin", "Hard enamel, polished flat, black metal plating"],
+  ["Pin fixing", "Single post with a butterfly clutch"],
+  ["Packing", "Sealed polybag; the pin on a printed backing card"],
+];
 
 export default function HomePage() {
   const releases = getFeatured(4);
 
   return (
     <>
-      {/* 1 — Hero. One full-bleed 16:9 frame, a single line of type bottom-left,
-             no CTA button. The whole thing is the link. */}
+      {/* 1 — Hero.
+             Art-directed: a portrait crop on mobile with the type set below it,
+             a wide crop on desktop with the type set into the lower left, which
+             the banner deliberately leaves empty. Overlaying the type on the
+             portrait crop ran it straight across the object. */}
       <section>
-        <Link href="/keychains" className="group relative block">
-          <div className="relative aspect-[4/5] w-full sm:aspect-[16/9]">
+        <Link href="/product/skeleton-keychain" className="group relative block">
+          <div className="relative aspect-[4/5] w-full bg-wash sm:hidden">
+            <Image
+              src="/products/hero-mobile.jpg"
+              alt=""
+              aria-hidden
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="relative hidden aspect-[16/9] w-full bg-wash sm:block">
             <Image
               src="/products/hero.jpg"
               alt=""
@@ -25,11 +104,24 @@ export default function HomePage() {
               className="object-cover"
             />
           </div>
-          <div className="absolute bottom-0 left-0 p-[var(--gutter)]">
-            <p className="display text-4xl text-ink">Skeleton Keychain</p>
-            <p className="link-underline mt-2 inline-block text-sm text-ink">
-              The current drop
-            </p>
+
+          <div className="bg-wash sm:absolute sm:inset-x-0 sm:bottom-0 sm:bg-transparent">
+            <div className="mx-auto max-w-[var(--max-width)] px-[var(--gutter)] pb-7 sm:pb-9">
+              <p className="text-xs text-ink-muted">Current release</p>
+              <h1 className="display mt-2 text-5xl text-ink">Skeleton Keychain</h1>
+
+              <div className="mt-5 h-px w-full max-w-[380px] bg-ink" />
+
+              <div className="mt-4 flex flex-wrap gap-x-7 gap-y-1">
+                <span className="text-sm text-ink-muted">Soft PVC</span>
+                <span className="text-sm text-ink-muted">Nickel hardware</span>
+                <span className="text-sm text-ink-muted">Sealed polybag</span>
+              </div>
+
+              <span className="link-underline mt-5 inline-block text-sm text-ink">
+                See the object
+              </span>
+            </div>
           </div>
         </Link>
       </section>
@@ -53,7 +145,15 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 3 — Category blocks */}
+        {/* 3 — How the studio works, as a ruled grid rather than prose. */}
+        <section className="mt-11">
+          <SectionHeading title="How we work" />
+          <div className="mt-6">
+            <FeatureGrid features={HOW_WE_WORK} />
+          </div>
+        </section>
+
+        {/* 4 — Category blocks */}
         <section className="mt-11">
           <SectionHeading title="Categories" />
           <div
@@ -84,8 +184,7 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 4 — Lookbook. The greyscale campaign frames, no captions, no links.
-               Purely the object, three times. */}
+        {/* 5 — Lookbook. The greyscale campaign frames, no captions, no links. */}
         <section className="mt-11">
           <SectionHeading title="Lookbook" />
           <div
@@ -95,9 +194,7 @@ export default function HomePage() {
             {lookbook.map((frame, i) => (
               <div
                 key={frame.src}
-                className={`relative aspect-[4/5] bg-wash ${
-                  i === 2 ? "hidden sm:block" : ""
-                }`}
+                className={`relative aspect-[4/5] bg-wash ${i === 2 ? "hidden sm:block" : ""}`}
               >
                 <Image
                   src={frame.src}
@@ -111,16 +208,28 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 5 — Editorial block. This is where the organic traffic lands, so it
-               gets real hierarchy rather than footer treatment. */}
+        {/* 6 — Ordering, as a second ruled grid. */}
         <section className="mt-11">
-          <div
-            className="prose-editorial"
-            style={{ maxWidth: "var(--reading-width)" }}
-          >
-            <h2 className="display text-4xl text-ink">
-              Small runs, made properly
-            </h2>
+          <SectionHeading title="Ordering" />
+          <div className="mt-6">
+            <FeatureGrid features={BUYING} />
+          </div>
+        </section>
+
+        {/* 7 — The facts, as a ruled table. */}
+        <section className="mt-11">
+          <SectionHeading title="What the objects are" />
+          <div className="mt-6">
+            <SpecTable rows={SPECS} />
+          </div>
+        </section>
+
+        {/* 8 — Editorial block. This is where the organic traffic lands, so the
+               long-form copy stays; the ruled blocks above carry the scanning
+               reader and this carries the search engine. */}
+        <section className="mt-11">
+          <div className="prose-editorial" style={{ maxWidth: "var(--reading-width)" }}>
+            <h2 className="display text-4xl text-ink">Small runs, made properly</h2>
 
             <p className="mt-6 text-base text-ink">
               {site.brand} produces collectible objects in short runs. Every
@@ -132,11 +241,11 @@ export default function HomePage() {
             <h3 className="display mt-8 text-3xl text-ink">How the drops work</h3>
             <p className="mt-4 text-base text-ink">
               Releases are announced to the mailing list first and go live on the
-              site at the same time for everyone. There is no queue, no raffle
-              and no reserved allocation. Stock is decremented at checkout, so
-              what the grid shows is what is actually left. Items marked sold out
-              are not restocked; if a run returns it is because the piece has been
-              remade, and it is listed as a new release with its own run size.
+              site at the same time for everyone. Stock is decremented at
+              checkout, so what the grid shows is what is actually left. Items
+              marked sold out are not restocked; if a run returns it is because
+              the piece has been remade, and it is listed as a new release with
+              its own run size.
             </p>
 
             <h3 className="display mt-8 text-3xl text-ink">Materials and making</h3>
@@ -146,13 +255,11 @@ export default function HomePage() {
               assembled in small batches with nickel-plated hardware. Pins are
               struck in metal and filled with hard enamel, polished flat, and
               mounted on printed backing card. Each product page lists the
-              material, the construction and the finished dimensions, and nothing
-              else — the object should make its own argument.
+              material and the construction, and nothing else — the object
+              should make its own argument.
             </p>
 
-            <h3 className="display mt-8 text-3xl text-ink">
-              Shipping and returns
-            </h3>
+            <h3 className="display mt-8 text-3xl text-ink">Shipping and returns</h3>
             <p className="mt-4 text-base text-ink">
               Orders ship within two working days, tracked, from our own studio.
               Unopened items can be returned within thirty days of delivery for a
