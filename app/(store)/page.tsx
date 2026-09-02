@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ReleaseCard } from "@/components/release-card";
+import { ProductGrid } from "@/components/product-grid";
 import { CategoryGrid } from "@/components/category-grid";
 import { SectionHeading } from "@/components/section-heading";
 import { FeatureGrid, SpecTable, type Feature } from "@/components/feature-grid";
@@ -15,7 +16,7 @@ import {
   IconShip,
 } from "@/components/icons";
 import { site } from "@/lib/config";
-import { getFeatured, lookbook } from "@/data/products";
+import { getAllProducts, getFeatured } from "@/data/products";
 import banners from "@/data/banners.json";
 
 const HOW_WE_WORK: Feature[] = [
@@ -74,6 +75,7 @@ const SPECS: [string, string][] = [
 
 export default function HomePage() {
   const releases = getFeatured(4);
+  const everything = getAllProducts();
 
   return (
     <>
@@ -88,7 +90,7 @@ export default function HomePage() {
              its left side quiet and the type sits in it. */}
       <section className="bg-ink">
         <Link
-          href="/product/skeleton-keychain"
+          href="/product/skeleton-keychain-green"
           className="group relative block focus-visible:outline-offset-[-4px]"
         >
           <div className="sm:hidden">
@@ -176,27 +178,13 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* 5 — Lookbook. The greyscale campaign frames, no captions, no links. */}
+        {/* 5 — The full catalogue. The greyscale frames used to carry a
+               lookbook strip here; they are products in their own right now, so
+               showing them twice on one page would just be repetition. */}
         <section className="mt-11">
-          <SectionHeading title="Lookbook" />
-          <div
-            className="mt-6 grid grid-cols-2 sm:grid-cols-3"
-            style={{ gap: "var(--grid-gap)" }}
-          >
-            {lookbook.map((frame, i) => (
-              <div
-                key={frame.src}
-                className={`relative aspect-[4/5] bg-wash ${i === 2 ? "hidden sm:block" : ""}`}
-              >
-                <Image
-                  src={frame.src}
-                  alt={frame.alt}
-                  fill
-                  sizes="(min-width: 640px) 33vw, 50vw"
-                  className="object-cover"
-                />
-              </div>
-            ))}
+          <SectionHeading title="Everything" href="/keychains" action="Browse keychains" />
+          <div className="mt-6">
+            <ProductGrid products={everything} />
           </div>
         </section>
 

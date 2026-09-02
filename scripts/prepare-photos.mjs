@@ -476,17 +476,18 @@ const INK = "#000000";
 await mkdir(OUT, { recursive: true });
 
 console.log("Product tiles");
+// Every supplied photograph is its own product, so every one gets a tile on
+// paper. The greyscale frames stay greyscale — that is what the Mono editions
+// are — but they sit on the same white ground as the rest so the grid is even.
 await build({ src: "keychain-front.jpg", out: "keychain-front.jpg", ...TILE });
 await build({ src: "keychain-packaged.jpg", out: "keychain-packaged.jpg", ...TILE });
 await build({ src: "keychain-reverse.jpg", out: "keychain-reverse.jpg", ...TILE });
+await build({ src: "keychain-mono-front.jpg", out: "keychain-mono-front.jpg", ...TILE, mono: true });
+await build({ src: "keychain-mono-packaged.jpg", out: "keychain-mono-packaged.jpg", ...TILE, mono: true });
+await build({ src: "keychain-mono-reverse.jpg", out: "keychain-mono-reverse.jpg", ...TILE, mono: true });
 await build({ src: "pin-front.jpg", out: "pin-front.jpg", ...TILE });
 await build({ src: "pin-packaged.jpg", out: "pin-packaged.jpg", ...TILE });
 await build({ src: "pin-reverse.jpg", out: "pin-reverse.jpg", ...TILE });
-
-console.log("Lookbook (greyscale campaign frames)");
-await build({ src: "keychain-mono-front.jpg", out: "lookbook-01.jpg", ...TILE, bg: WASH, mono: true });
-await build({ src: "keychain-mono-packaged.jpg", out: "lookbook-02.jpg", ...TILE, bg: WASH, mono: true });
-await build({ src: "keychain-mono-reverse.jpg", out: "lookbook-03.jpg", ...TILE, bg: WASH, mono: true });
 
 console.log("Banners");
 /**

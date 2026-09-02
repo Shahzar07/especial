@@ -36,7 +36,11 @@ export function ProductCard({
             fill
             sizes={sizes}
             priority={priority}
-            className="object-cover transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] group-hover:opacity-0"
+            // Only fade out when there is something to fade TO. Every product
+            // having a single photograph made hovering any tile blank it.
+            className={`object-cover transition-opacity duration-[var(--duration-base)] ease-[var(--ease-standard)] ${
+              secondary ? "group-hover:opacity-0" : ""
+            }`}
           />
           {secondary && (
             <Image

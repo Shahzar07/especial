@@ -37,30 +37,22 @@ now stands on its own, and the route always answers with JSON regardless.
 
 ---
 
-## The catalogue is real
+## The catalogue
 
-Two products, both photographed:
+Nine products, one per supplied photograph, each sold separately — six
+keychains and three pins.
 
-| Product | Category | Frames |
-|---|---|---|
-| Skeleton Keychain | Keychains | front, polybag, black reverse |
-| Brain Pin | Pins | front, backing card, reverse with clutch |
+Everything factual on those pages — material, construction, hardware, finish,
+packing — was read off the photographs. **Prices and dimensions were not
+visible in them.** They are set to plausible figures so the storefront reads as
+a real shop; confirm both before launch.
 
-Three greyscale frames of the keychain carry the home page's lookbook strip.
-
-Everything factual on those pages — materials, construction, hardware, finish,
-colours, packaging — was read off the photographs. **Prices and dimensions were
-not visible in them and are placeholders.** See "Before you launch".
-
-### There is no "Glow" colourway
-
-An earlier draft listed one, inferred from three greyscale frames. Measuring
-them settled it: those frames carry *exactly* 0.0 saturation in every pixel,
-which is impossible for a colour photograph of a real grey object. They are
-black-and-white treatments of the same green-and-pink keychain, so they became
-the lookbook rather than a second variant.
-
----
+Worth knowing when you revise this: three of the nine frames are the same
+object photographed from the reverse, and three more are greyscale treatments
+of the colour frames — those carry 0.0 saturation in every pixel, which no
+photograph of a real grey object can. They are listed as separate editions
+because that is how the catalogue was specified, not because the photographs
+show nine distinct objects.
 
 ## Photography pipeline
 
@@ -270,7 +262,7 @@ minutes per IP, so each browser context carries its own `X-Forwarded-For` drawn
 from a range randomised per run. Without that, a second run inside the window
 gets throttled and reports as though the cookie had stopped working.
 
-Last run: **29 passed, 0 failed**.
+Last run: **31 passed, 0 failed**.
 
 ---
 

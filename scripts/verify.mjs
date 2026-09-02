@@ -77,9 +77,9 @@ head("Gate: deep link is preserved and restored");
 const ctx = await freshContext(browser, { viewport: { width: 1440, height: 900 } });
 const page = await ctx.newPage();
 
-await page.goto(`${BASE}/product/skeleton-keychain`, { waitUntil: "domcontentloaded" });
+await page.goto(`${BASE}/product/skeleton-keychain-green`, { waitUntil: "domcontentloaded" });
 ok("clean browser is gated", page.url().includes("/gate"), page.url());
-ok("?next= preserved", decodeURIComponent(page.url()).includes("next=/product/skeleton-keychain"));
+ok("?next= preserved", decodeURIComponent(page.url()).includes("next=/product/skeleton-keychain-green"));
 
 await page.fill("#gate-email", "not-an-email");
 await page.click('button[type="submit"]');
@@ -91,9 +91,9 @@ ok("invalid email sets no cookie", !(await ctx.cookies()).some((c) => c.name ===
 await page.fill("#gate-email", "verify@example.com");
 await page.click('button[type="submit"]');
 try {
-  await page.waitForFunction(() => location.pathname === "/product/skeleton-keychain", null, { timeout: 15000 });
+  await page.waitForFunction(() => location.pathname === "/product/skeleton-keychain-green", null, { timeout: 15000 });
 } catch { /* asserted below */ }
-ok("returns to the exact URL", new URL(page.url()).pathname === "/product/skeleton-keychain", page.url());
+ok("returns to the exact URL", new URL(page.url()).pathname === "/product/skeleton-keychain-green", page.url());
 
 const cookie = (await ctx.cookies()).find((c) => c.name === "ml_pass");
 ok("cookie is httpOnly", Boolean(cookie?.httpOnly));
@@ -123,7 +123,7 @@ for (const [name, ua] of [
 
 /* 3 ── Visual invariants ------------------------------------------------ */
 head("Design rules hold at computed style");
-const routes = ["/gate", "/", "/keychains", "/product/skeleton-keychain", "/privacy"];
+const routes = ["/gate", "/", "/keychains", "/product/skeleton-keychain-green", "/privacy"];
 const store = await freshContext(browser, { viewport: { width: 1440, height: 900 } });
 const sp = await store.newPage();
 await passGate(sp, "rules@example.com");
@@ -160,7 +160,7 @@ ok("no radius >2px, no shadow, no weight >600, no serif <32px, no h-overflow",
 /* 4 ── Cart ------------------------------------------------------------- */
 head("Cart drawer");
 await sp.setViewportSize({ width: 1440, height: 900 });
-await sp.goto(`${BASE}/product/skeleton-keychain`, { waitUntil: "domcontentloaded" });
+await sp.goto(`${BASE}/product/skeleton-keychain-green`, { waitUntil: "domcontentloaded" });
 await sp.click('button:has-text("Add to bag")');
 await sp.waitForTimeout(700);
 const drawerState = () => sp.evaluate(() => {
@@ -218,7 +218,7 @@ head("Checkout");
   // The catalogue prices the order. A browser sends slugs and quantities; if it
   // could send money, anyone could set their own.
   const tampered = await post("/api/checkout", {
-    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: 1, priceCents: 1 }],
+    lines: [{ slug: "skeleton-keychain-green", variantId: "standard", quantity: 1, priceCents: 1 }],
     customer: { email: "a@b.co", name: "T", line1: "1 St", city: "K", postcode: "1", country: "PK" },
   }, 210);
   const tamperedBody = await tampered.json();
@@ -235,19 +235,19 @@ head("Checkout");
   ok("an unknown product is refused", unknown.status() === 409);
 
   const badQty = await post("/api/checkout", {
-    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: -5 }],
+    lines: [{ slug: "skeleton-keychain-green", variantId: "standard", quantity: -5 }],
     customer: { email: "a@b.co", name: "T", line1: "1 St", city: "K", postcode: "1", country: "PK" },
   }, 212);
   ok("a negative quantity is refused", badQty.status() === 400);
 
   const badEmail = await post("/api/checkout", {
-    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: 1 }],
+    lines: [{ slug: "skeleton-keychain-green", variantId: "standard", quantity: 1 }],
     customer: { email: "nope", name: "T", line1: "1 St", city: "K", postcode: "1", country: "PK" },
   }, 213);
   ok("an invalid email is refused server-side", badEmail.status() === 400);
 
   const quote = await post("/api/checkout/quote", {
-    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: 2, priceCents: 1 }],
+    lines: [{ slug: "skeleton-keychain-green", variantId: "standard", quantity: 2, priceCents: 1 }],
   }, 214);
   const q = await quote.json();
   ok("the quote prices from the catalogue", q.subtotalCents === 3600, `subtotal ${q.subtotalCents}`);
@@ -258,7 +258,7 @@ head("Checkout");
   );
 
   const big = await post("/api/checkout/quote", {
-    lines: [{ slug: "skeleton-keychain", variantId: "green-pink", quantity: 5 }],
+    lines: [{ slug: "skeleton-keychain-green", variantId: "standard", quantity: 5 }],
   }, 215);
   const b = await big.json();
   ok(
@@ -266,6 +266,34 @@ head("Checkout");
     b.subtotalCents >= b.freeShippingOverCents && b.shippingCents === 0,
     `subtotal ${b.subtotalCents}, shipping ${b.shippingCents}`,
   );
+}
+
+/* 4d ── Hovering a tile must not blank it ────────────────────────────────── */
+head("Product tiles survive hover");
+{
+  await sp.setViewportSize({ width: 1440, height: 1000 });
+  await sp.goto(`${BASE}/keychains`, { waitUntil: "domcontentloaded" });
+  await sp.waitForTimeout(1500);
+
+  // The tile crossfades to a second photograph on hover. Products with only
+  // one photograph have nothing to fade to, and used to fade to nothing at all.
+  const tile = sp.locator("main article").first();
+  await tile.hover();
+  await sp.waitForTimeout(600);
+
+  const visible = await sp.evaluate(() => {
+    const a = document.querySelector("main article");
+    const imgs = [...a.querySelectorAll("img")];
+    return imgs.some((i) => Number(getComputedStyle(i).opacity) > 0.9 && i.naturalWidth > 0);
+  });
+  ok("a hovered tile still shows a photograph", visible);
+
+  const anyBlank = await sp.evaluate(() =>
+    [...document.querySelectorAll("main article")].some((a) => {
+      const imgs = [...a.querySelectorAll("img")];
+      return imgs.length > 0 && imgs.every((i) => Number(getComputedStyle(i).opacity) < 0.1);
+    }));
+  ok("no tile is left with every image transparent", !anyBlank);
 }
 
 /* 5 ── Reduced motion --------------------------------------------------- */
