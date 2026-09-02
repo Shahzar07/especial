@@ -1,0 +1,250 @@
+@import "tailwindcss" source(none);
+
+/* Scan only the files that carry class names. Auto-detection also reads
+   prose in design.ts and would emit utilities (.rounded) for words that
+   appear in its comments, which breaks the zero-radius rule. */
+@source "../app/**/*.{ts,tsx}";
+@source "../components/**/*.{ts,tsx}";
+@source "../lib/**/*.{ts,tsx}";
+@source "../data/**/*.{ts,tsx}";
+
+/* ---------------------------------------------------------------------------
+   Tokens mirrored from design.ts. design.ts remains the single source of truth
+   for TS consumers; this @theme block is its CSS twin. Any value added here
+   must exist in design.ts first.
+   --------------------------------------------------------------------------- */
+@theme {
+  /* color */
+  --color-paper: #ffffff;
+  --color-ink: #000000;
+  --color-ink-muted: #666666;
+  --color-ink-faint: #9a9a9a;
+  --color-rule: #e6e6e4;
+  --color-wash: #f5f5f3;
+  --color-accent: #1b34ff;
+  --color-accent-soft: #e8ebff;
+  --color-sale: #b4231f;
+  --color-positive: #1f6b3a;
+
+  /* font families — real families are injected by next/font/local as
+     --font-sans-src / --font-display-src on <html> */
+  --font-sans: var(--font-sans-src), "Switzer", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: var(--font-display-src), "Editorial New", "Times New Roman", Times, serif;
+
+  /* tracking */
+  --tracking-wordmark: 0.22em;
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.04em;
+
+  /* leading */
+  --leading-display: 1.02;
+  --leading-heading: 1.12;
+  --leading-body: 1.55;
+  --leading-ui: 1.2;
+
+  /* type scale — 16px base, 1.25 ratio */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: clamp(1.75rem, 1.2rem + 2vw, 1.9375rem);
+  --text-3xl: clamp(2rem, 1.4rem + 3vw, 2.4375rem);
+  --text-4xl: clamp(2.5rem, 1.6rem + 4.5vw, 3.0625rem);
+  --text-5xl: clamp(3rem, 1.8rem + 6vw, 4.75rem);
+
+  /* spacing — 4px base, 8px rhythm */
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.5rem;
+  --spacing-6: 2rem;
+  --spacing-7: 3rem;
+  --spacing-8: 4rem;
+  --spacing-9: 6rem;
+  --spacing-10: 8rem;
+  --spacing-11: 12rem;
+
+  /* layout */
+  --gutter: clamp(1.25rem, 4vw, 4rem);
+  --max-width: 1680px;
+  --reading-width: 68ch;
+  --column-gap: clamp(1rem, 2vw, 2rem);
+  --grid-gap: clamp(0.75rem, 2vw, 2rem);
+  --header-height: 64px;
+
+  /* radius — zero everywhere; 2px exists only for the focus ring */
+  --radius-none: 0;
+  --radius-focus: 2px;
+
+  /* motion */
+  --duration-instant: 80ms;
+  --duration-fast: 180ms;
+  --duration-base: 320ms;
+  --duration-slow: 520ms;
+  --ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --gate-stagger: 90ms;
+
+  /* z */
+  --z-sticky: 10;
+  --z-header: 20;
+  --z-scrim: 30;
+  --z-drawer: 40;
+  --z-overlay: 50;
+  --z-gate: 100;
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Max weight in the system is 600. Never 700+. */
+strong,
+b {
+  font-weight: 600;
+}
+
+/* Prices and any figure that sits in a column. Never monospace. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Display serif — 40px and above only, never bold. */
+.display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-display);
+}
+
+/* The single accent use in body copy. */
+.prose-editorial a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+/* ---------------------------------------------------------------------------
+   Focus — the only rounded thing in the system, and it must always be visible
+   for keyboard users.
+   --------------------------------------------------------------------------- */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+  border-radius: var(--radius-focus);
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+/* ---------------------------------------------------------------------------
+   Hover vocabulary: underline on links, crossfade on product images.
+   Nothing moves, nothing lifts.
+   --------------------------------------------------------------------------- */
+.link-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.12em;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
+
+.link-underline:hover::after,
+.link-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.link-underline[data-active="true"] {
+  color: var(--color-accent);
+}
+
+.link-underline[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------------------
+   Gate reveal — one orchestrated moment, on load, once.
+   --------------------------------------------------------------------------- */
+@keyframes gate-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.gate-reveal {
+  opacity: 0;
+  animation: gate-rise var(--duration-slow) var(--ease-standard) forwards;
+  animation-delay: calc(var(--gate-stagger) * var(--step, 0));
+}
+
+/* Hide scrollbars on the mobile snap rail without disabling scrolling. */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion — neutralise every duration.
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
