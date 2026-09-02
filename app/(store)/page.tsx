@@ -15,6 +15,7 @@ import {
 } from "@/components/icons";
 import { categories, site } from "@/lib/config";
 import { getFeatured, lookbook } from "@/data/products";
+import banners from "@/data/banners.json";
 
 const HOW_WE_WORK: Feature[] = [
   {
@@ -76,51 +77,64 @@ export default function HomePage() {
   return (
     <>
       {/* 1 — Hero.
-             Art-directed: a portrait crop on mobile with the type set below it,
-             a wide crop on desktop with the type set into the lower left, which
-             the banner deliberately leaves empty. Overlaying the type on the
-             portrait crop ran it straight across the object. */}
-      <section>
-        <Link href="/product/skeleton-keychain" className="group relative block">
-          <div className="relative aspect-[4/5] w-full bg-wash sm:hidden">
+             Dark artwork, so every mark set over it is paper rather than ink.
+             Laid out from the artwork's real dimensions in data/banners.json,
+             so it is never cropped to fit a fixed container — swapping in
+             artwork of a different shape needs no change here.
+             Art-directed: the portrait crop on mobile carries the type on a
+             continuous ink band beneath it, because overlaying it ran the
+             headline straight across the object; the wide crop on desktop keeps
+             its left side quiet and the type sits in it. */}
+      <section className="bg-ink">
+        <Link
+          href="/product/skeleton-keychain"
+          className="group relative block focus-visible:outline-offset-[-4px]"
+        >
+          <div className="sm:hidden">
             <Image
-              src="/products/hero-mobile.jpg"
+              src={banners.heroMobile.src}
               alt=""
               aria-hidden
-              fill
+              width={banners.heroMobile.width}
+              height={banners.heroMobile.height}
               priority
               sizes="100vw"
-              className="object-cover"
+              className="h-auto w-full"
             />
           </div>
-          <div className="relative hidden aspect-[16/9] w-full bg-wash sm:block">
+          <div className="hidden sm:block">
             <Image
-              src="/products/hero.jpg"
+              src={banners.hero.src}
               alt=""
               aria-hidden
-              fill
+              width={banners.hero.width}
+              height={banners.hero.height}
               priority
               sizes="100vw"
-              className="object-cover"
+              className="h-auto w-full"
             />
           </div>
 
-          <div className="bg-wash sm:absolute sm:inset-x-0 sm:bottom-0 sm:bg-transparent">
-            <div className="mx-auto max-w-[var(--max-width)] px-[var(--gutter)] pb-7 sm:pb-9">
-              <p className="text-xs text-ink-muted">Current release</p>
-              <h1 className="display mt-2 text-5xl text-ink">Skeleton Keychain</h1>
+          <div className="sm:absolute sm:inset-y-0 sm:left-0 sm:flex sm:items-center">
+            <div className="mx-auto w-full max-w-[var(--max-width)] px-[var(--gutter)] pb-8 sm:pb-0">
+              <div className="sm:max-w-[42%]">
+                <p className="text-xs text-paper/60">Current release</p>
+                <h1 className="display mt-2 text-5xl text-paper">
+                  Skeleton Keychain
+                </h1>
 
-              <div className="mt-5 h-px w-full max-w-[380px] bg-ink" />
+                <div className="mt-5 h-px w-full max-w-[380px] bg-paper/40" />
 
-              <div className="mt-4 flex flex-wrap gap-x-7 gap-y-1">
-                <span className="text-sm text-ink-muted">Soft PVC</span>
-                <span className="text-sm text-ink-muted">Nickel hardware</span>
-                <span className="text-sm text-ink-muted">Sealed polybag</span>
+                <div className="mt-4 flex flex-wrap gap-x-7 gap-y-1">
+                  <span className="text-sm text-paper/60">Soft PVC</span>
+                  <span className="text-sm text-paper/60">Nickel hardware</span>
+                  <span className="text-sm text-paper/60">Sealed polybag</span>
+                </div>
+
+                <span className="link-underline mt-5 inline-block text-sm text-paper">
+                  See the object
+                </span>
               </div>
-
-              <span className="link-underline mt-5 inline-block text-sm text-ink">
-                See the object
-              </span>
             </div>
           </div>
         </Link>

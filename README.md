@@ -78,10 +78,24 @@ full-bleed white frame on a white page has no edge at all, so the hero would
 read as an object floating in undefined space rather than as a composition.
 `wash` is a tonal band, not a card — still no border, no radius, no shadow.
 
-The hero is art-directed: `hero.jpg` (16:9) for desktop with the type set into
-its empty lower left, and `hero-mobile.jpg` (4:5) with the type set *below* it.
-Cropping the wide banner to a portrait viewport cut the object in half and ran
-the headline straight across it.
+### The hero banner
+
+The hero runs on hand-made artwork, not on the pipeline's output. Drop a wide
+file at `photos/banner/hero.png` and a portrait one at
+`photos/banner/hero-mobile.png`, run `npm run photos`, and they are optimised
+into `public/products/`. Anything present there wins; the pipeline never
+regenerates over it. With nothing supplied it composes a stand-in from the
+product cut-outs so the site still builds.
+
+**Supplied artwork is never cropped.** Its real dimensions are written to
+`data/banners.json` and the page lays the hero out from those, so artwork of any
+shape drops in without touching a stylesheet and nothing composed by hand gets
+silently cut to fit a container.
+
+The artwork is dark and the page sets the wordmark over it in white, so leave
+the left of the wide file and the lower part of the portrait one quiet. On
+mobile the type sits on a continuous ink band *beneath* the image rather than
+over it — overlaying it ran the headline straight across the object.
 
 **Dev gotcha.** Next caches optimised images in `.next/cache/images`, keyed on
 the request URL. Replacing a file in `public/products/` without changing its

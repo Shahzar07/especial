@@ -1,0 +1,12 @@
+{
+  "hero": {
+    "src": "/products/hero.jpg",
+    "width": 1774,
+    "height": 887
+  },
+  "heroMobile": {
+    "src": "/products/hero-mobile.jpg",
+    "width": 957,
+    "height": 1643
+  }
+}

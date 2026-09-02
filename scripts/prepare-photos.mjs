@@ -31,9 +31,11 @@
  * change to a source photograph.
  */
 import sharp from "sharp";
-import { mkdir } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 
 const SRC = "photos/source";
+const BANNER_SRC = "photos/banner";
 const OUT = "public/products";
 
 /** A pixel this far from the backdrop (sum of channel deltas) is the object. */
@@ -304,6 +306,133 @@ async function build({
   console.log(`  ${out.padEnd(30)} ${width}x${height}  ground ${ground}`);
 }
 
+/* ── cut-outs and the dark banner ─────────────────────────────────────────── */
+
+/**
+ * The object alone, on transparency, cropped to its own silhouette.
+ *
+ * The tiles can get away with keeping the photograph's rectangle because their
+ * ground is corrected to the same white as the page. A dark banner cannot: a
+ * white rectangle on black is exactly what it sounds like. So the object is
+ * flat-fielded to a known white, thresholded against it, reduced to its largest
+ * connected component, and the resulting mask becomes the alpha channel. The
+ * mask is blurred by a pixel or two before it is applied, which keeps the
+ * moulded edge from going hard and jagged against the black.
+ */
+async function cutout(file, { threshold = 60, feather = 1.6, pad = 0.01 } = {}) {
+  const meta = await sharp(file).metadata();
+  const W = meta.width, H = meta.height;
+
+  const { field } = await illuminationField(file, W, H);
+  const { data: srcPx, info } = await sharp(file).toColourspace("srgb").raw()
+    .toBuffer({ resolveWithObject: true });
+  const C = info.channels;
+
+  // Flat-field to pure white so the threshold has one known ground.
+  const rgb = Buffer.alloc(W * H * 3);
+  for (let i = 0, p = 0, q = 0; i < W * H; i++, p += C, q += 3) {
+    for (let c = 0; c < 3; c++) {
+      const v = (srcPx[p + c] * 255) / (field[q + c] || 1);
+      rgb[q + c] = v > 255 ? 255 : v < 0 ? 0 : v;
+    }
+  }
+
+  const mask = new Uint8Array(W * H);
+  for (let i = 0, q = 0; i < W * H; i++, q += 3) {
+    const d = (255 - rgb[q]) + (255 - rgb[q + 1]) + (255 - rgb[q + 2]);
+    if (d > threshold) mask[i] = 1;
+  }
+
+  // Largest connected component, at full resolution.
+  const seen = new Uint8Array(W * H);
+  const queue = new Int32Array(W * H);
+  let best = null;
+  for (let start = 0; start < W * H; start++) {
+    if (!mask[start] || seen[start]) continue;
+    let head = 0, tail = 0;
+    queue[tail++] = start; seen[start] = 1;
+    let count = 0, x0 = W, y0 = H, x1 = 0, y1 = 0;
+    const members = [];
+    while (head < tail) {
+      const i = queue[head++];
+      const x = i % W, y = (i / W) | 0;
+      count++; members.push(i);
+      if (x < x0) x0 = x; if (x > x1) x1 = x;
+      if (y < y0) y0 = y; if (y > y1) y1 = y;
+      if (x + 1 < W && mask[i + 1] && !seen[i + 1]) { seen[i + 1] = 1; queue[tail++] = i + 1; }
+      if (x - 1 >= 0 && mask[i - 1] && !seen[i - 1]) { seen[i - 1] = 1; queue[tail++] = i - 1; }
+      if (y + 1 < H && mask[i + W] && !seen[i + W]) { seen[i + W] = 1; queue[tail++] = i + W; }
+      if (y - 1 >= 0 && mask[i - W] && !seen[i - W]) { seen[i - W] = 1; queue[tail++] = i - W; }
+    }
+    if (!best || count > best.count) best = { count, x0, y0, x1, y1, members };
+  }
+  if (!best) throw new Error(`${file}: nothing to cut out`);
+
+  // Keep only the winning component.
+  const keep = new Uint8Array(W * H);
+  for (const i of best.members) keep[i] = 255;
+
+  const px = Math.round(Math.max(W, H) * pad);
+  const left = Math.max(0, best.x0 - px);
+  const top = Math.max(0, best.y0 - px);
+  const width = Math.min(W - left, best.x1 - best.x0 + px * 2);
+  const height = Math.min(H - top, best.y1 - best.y0 + px * 2);
+
+  const alpha = await sharp(Buffer.from(keep), { raw: { width: W, height: H, channels: 1 } })
+    .blur(feather)
+    .extract({ left, top, width, height })
+    .raw()
+    .toBuffer();
+
+  const colour = await sharp(rgb, { raw: { width: W, height: H, channels: 3 } })
+    .extract({ left, top, width, height })
+    .raw()
+    .toBuffer();
+
+  const rgba = Buffer.alloc(width * height * 4);
+  for (let i = 0; i < width * height; i++) {
+    rgba[i * 4] = colour[i * 3];
+    rgba[i * 4 + 1] = colour[i * 3 + 1];
+    rgba[i * 4 + 2] = colour[i * 3 + 2];
+    rgba[i * 4 + 3] = alpha[i];
+  }
+  return { rgba, width, height };
+}
+
+/**
+ * Composes cut-out objects onto a flat ground.
+ * `placements` size each object by a fraction of the canvas height and put its
+ * centre at a fraction of the canvas.
+ */
+async function composeBanner({ out, width, height, ground = "#000000", placements }) {
+  const layers = [];
+  for (const place of placements) {
+    const cut = await cutout(`${SRC}/${place.src}`);
+    const targetH = Math.round(height * place.scale);
+    const targetW = Math.max(1, Math.round((cut.width / cut.height) * targetH));
+
+    const resized = await sharp(cut.rgba, {
+      raw: { width: cut.width, height: cut.height, channels: 4 },
+    })
+      .resize(targetW, targetH, { fit: "fill", kernel: "lanczos3" })
+      .png()
+      .toBuffer();
+
+    layers.push({
+      input: resized,
+      left: Math.round(width * place.at[0] - targetW / 2),
+      top: Math.round(height * place.at[1] - targetH / 2),
+    });
+  }
+
+  await sharp({ create: { width, height, channels: 3, background: ground } })
+    .composite(layers)
+    .jpeg({ quality: 90, mozjpeg: true, chromaSubsampling: "4:4:4" })
+    .toFile(`${OUT}/${out}`);
+
+  console.log(`  ${out.padEnd(30)} ${width}x${height}  ground ${ground}`);
+}
+
 /* ── assets ──────────────────────────────────────────────────────────────── */
 
 const TILE = { width: 1400, height: 1750 };   // 4:5, every product image
@@ -318,6 +447,7 @@ const BLOCK = { width: 1800, height: 1350 };  // 4:3, category blocks
  * card — still no border, no radius, no shadow.
  */
 const WASH = "#f5f5f3";
+const INK = "#000000";
 
 await mkdir(OUT, { recursive: true });
 
@@ -335,21 +465,77 @@ await build({ src: "keychain-mono-packaged.jpg", out: "lookbook-02.jpg", ...TILE
 await build({ src: "keychain-mono-reverse.jpg", out: "lookbook-03.jpg", ...TILE, bg: WASH, mono: true });
 
 console.log("Banners");
-// Hero: the colour object, large, on the right so the lower left stays clear
-// for the type block the page sets into it. The greyscale frames are stronger
-// as a lookbook than as the first thing anyone sees — the green and pink is
-// what makes this object worth looking at twice.
-await build({
-  src: "keychain-front.jpg", out: "hero.jpg", ...BANNER,
-  fit: [0.40, 0.80], anchor: [0.70, 0.46], bg: WASH,
-});
-// Mobile hero is a separate crop, not the 16:9 one squeezed. Cropping the wide
-// banner to a portrait viewport cuts the object in half; and on mobile the type
-// sits below the image rather than over it, so the object can be centred.
-await build({
-  src: "keychain-front.jpg", out: "hero-mobile.jpg",
-  width: 1200, height: 1500, fit: [0.86, 0.62], anchor: [0.5, 0.48], bg: WASH,
-});
+/**
+ * Hero.
+ *
+ * Hand-made artwork in photos/banner/ always wins; the pipeline only optimises
+ * it and never regenerates over it, so re-running this script can never destroy
+ * supplied artwork.
+ *
+ * Supplied artwork is NEVER cropped. Its own aspect ratio is preserved and
+ * written to data/banners.json, and the page lays the hero out from those
+ * dimensions — so artwork of any shape drops in without touching a stylesheet,
+ * and nothing anyone composed by hand gets silently cut off to fit a container.
+ *
+ * With nothing supplied, a stand-in is composed from the product cut-outs on
+ * ink so the site still builds. The page sets the wordmark over it in white
+ * either way, which is why the artwork wants a quiet area for the type.
+ */
+async function hero({ out, supplied, fallback }) {
+  const candidates = [`${BANNER_SRC}/${supplied}.png`, `${BANNER_SRC}/${supplied}.jpg`];
+  const file = candidates.find((f) => existsSync(f));
+
+  if (file) {
+    // Cap the long edge: past this the file cost outruns any visible gain,
+    // since next/image re-encodes and downscales per viewport anyway.
+    const meta = await sharp(file).metadata();
+    const MAX = 2600;
+    const scale = Math.min(1, MAX / Math.max(meta.width, meta.height));
+    const width = Math.round(meta.width * scale);
+    const height = Math.round(meta.height * scale);
+
+    await sharp(file)
+      .resize(width, height, { fit: "fill", kernel: "lanczos3" })
+      .jpeg({ quality: 93, mozjpeg: true, chromaSubsampling: "4:4:4" })
+      .toFile(`${OUT}/${out}`);
+
+    console.log(`  ${out.padEnd(30)} ${width}x${height}  supplied, uncropped`);
+    return { src: `/products/${out}`, width, height };
+  }
+
+  await composeBanner({ ...fallback, out, ground: INK });
+  console.log(`    (stand-in — drop ${BANNER_SRC}/${supplied}.png to replace)`);
+  return { src: `/products/${out}`, width: fallback.width, height: fallback.height };
+}
+
+const banners = {
+  hero: await hero({
+    out: "hero.jpg", supplied: "hero",
+    fallback: {
+      width: 2560, height: 1097,
+      placements: [
+        { src: "keychain-front.jpg", scale: 0.72, at: [0.62, 0.5] },
+        { src: "pin-front.jpg", scale: 0.4, at: [0.84, 0.34] },
+        { src: "keychain-reverse.jpg", scale: 0.46, at: [0.88, 0.72] },
+      ],
+    },
+  }),
+  heroMobile: await hero({
+    out: "hero-mobile.jpg", supplied: "hero-mobile",
+    fallback: {
+      width: 1200, height: 1500,
+      placements: [
+        { src: "keychain-front.jpg", scale: 0.4, at: [0.46, 0.3] },
+        { src: "pin-front.jpg", scale: 0.22, at: [0.78, 0.55] },
+        { src: "keychain-reverse.jpg", scale: 0.26, at: [0.26, 0.62] },
+      ],
+    },
+  }),
+};
+
+await writeFile("data/banners.json", JSON.stringify(banners, null, 2) + "\n");
+console.log("  data/banners.json written");
+
 await build({
   src: "keychain-front.jpg", out: "category-keychains.jpg", ...BLOCK,
   fit: [0.62, 0.68], anchor: [0.5, 0.42], bg: WASH,
