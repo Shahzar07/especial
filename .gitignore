@@ -6,3 +6,6 @@ out
 *.tsbuildinfo
 next-env.d.ts
 .DS_Store
+
+# Packaged theme (build artifact of wordpress-theme/especial-gallery)
+wordpress-theme/*.zip

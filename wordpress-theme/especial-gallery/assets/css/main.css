@@ -1,0 +1,1917 @@
+/**
+ * Especial Gallery — stylesheet.
+ *
+ * Every token below is mirrored from the source project's design.ts, which was
+ * the single source of truth for the visual system. The Next build reached them
+ * through Tailwind v4's @theme block; here they are plain custom properties and
+ * hand-written component rules, so the theme needs no build step and a site
+ * owner can edit it with nothing but a text editor.
+ *
+ * Rules of the system, enforced throughout:
+ *  - Nothing floats. No box-shadow anywhere. Depth comes from whitespace only.
+ *  - Nothing is rounded. radius = 0 everywhere except the 2px focus ring.
+ *  - Product imagery sits directly on the page, never inside a card.
+ *  - Hover never moves an element. It crossfades an image or draws an underline.
+ *  - Colour is reserved for the product photography and the focus ring.
+ *  - Maximum font weight is 600. Never 700+.
+ */
+
+/* ==========================================================================
+   1. Tokens
+   ========================================================================== */
+
+:root {
+  /* colour */
+  --eg-paper: #ffffff;
+  --eg-ink: #000000;
+  --eg-ink-muted: #666666;
+  --eg-ink-faint: #9a9a9a;
+  --eg-rule: #e6e6e4;
+  --eg-wash: #f5f5f3;
+  --eg-accent: #1b34ff;
+  --eg-accent-soft: #e8ebff;
+  --eg-sale: #b4231f;
+  --eg-positive: #1f6b3a;
+
+  /* type families — the @font-face blocks below define the real faces */
+  --eg-font-sans: "Instrument Sans", "Switzer", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --eg-font-display: "Instrument Serif", "Editorial New", "Times New Roman", Times, serif;
+
+  /* tracking */
+  --eg-tracking-wordmark: 0.22em;
+  --eg-tracking-tight: -0.02em;
+  --eg-tracking-wide: 0.04em;
+
+  /* leading */
+  --eg-leading-display: 1.02;
+  --eg-leading-heading: 1.12;
+  --eg-leading-body: 1.55;
+  --eg-leading-ui: 1.2;
+
+  /* type scale — 16px base, 1.25 ratio */
+  --eg-text-xs: 0.8125rem;
+  --eg-text-sm: 0.875rem;
+  --eg-text-base: 1rem;
+  --eg-text-lg: 1.25rem;
+  --eg-text-xl: 1.5625rem;
+  --eg-text-2xl: clamp(1.75rem, 1.2rem + 2vw, 1.9375rem);
+  --eg-text-3xl: clamp(2rem, 1.4rem + 3vw, 2.4375rem);
+  --eg-text-4xl: clamp(2.5rem, 1.6rem + 4.5vw, 3.0625rem);
+  --eg-text-5xl: clamp(3rem, 1.8rem + 6vw, 4.75rem);
+
+  /* spacing — 4px base, 8px rhythm */
+  --eg-space-1: 0.25rem;
+  --eg-space-2: 0.5rem;
+  --eg-space-3: 0.75rem;
+  --eg-space-4: 1rem;
+  --eg-space-5: 1.5rem;
+  --eg-space-6: 2rem;
+  --eg-space-7: 3rem;
+  --eg-space-8: 4rem;
+  --eg-space-9: 6rem;
+  --eg-space-10: 8rem;
+  --eg-space-11: 12rem;
+
+  /* layout */
+  --eg-gutter: clamp(1.25rem, 4vw, 4rem);
+  --eg-max-width: 1680px;
+  --eg-reading-width: 68ch;
+  --eg-column-gap: clamp(1rem, 2vw, 2rem);
+  --eg-grid-gap: clamp(0.75rem, 2vw, 2rem);
+  --eg-header-height: 64px;
+
+  /* radius — zero everywhere; 2px exists only for the focus ring */
+  --eg-radius-focus: 2px;
+
+  /* motion */
+  --eg-duration-instant: 80ms;
+  --eg-duration-fast: 180ms;
+  --eg-duration-base: 320ms;
+  --eg-duration-slow: 520ms;
+  --eg-ease-standard: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --eg-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --eg-gate-stagger: 90ms;
+
+  /* z — the scrim sits BELOW the drawer panel, or it swallows every click
+     inside it. `overlay` keeps its meaning: something that covers a drawer. */
+  --eg-z-sticky: 10;
+  --eg-z-header: 20;
+  --eg-z-scrim: 30;
+  --eg-z-drawer: 40;
+  --eg-z-overlay: 50;
+  --eg-z-gate: 100;
+}
+
+/* ==========================================================================
+   2. Fonts
+   --------------------------------------------------------------------------
+   Self-hosted woff2. No CDN request, so no FOUT and no third-party dependency.
+   design.ts specifies Switzer + Editorial New from Fontshare; these are its own
+   sanctioned substitutes. To swap: drop the two files into assets/fonts/ and
+   change the src paths here. Nothing else in the theme names a family.
+   ========================================================================== */
+
+@font-face {
+  font-family: "Instrument Sans";
+  src: url("../fonts/instrument-sans-var.woff2") format("woff2-variations");
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Instrument Serif";
+  src: url("../fonts/instrument-serif-400.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   3. Reset and base
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--eg-paper);
+  color: var(--eg-ink);
+  font-family: var(--eg-font-sans);
+  font-size: var(--eg-text-base);
+  line-height: var(--eg-leading-body);
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-weight: 400;
+  line-height: var(--eg-leading-heading);
+}
+
+p, figure, blockquote, dl, dd {
+  margin: 0;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+}
+
+img, svg, video, canvas {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Maximum weight in the system is 600. Never 700+. */
+strong, b, th {
+  font-weight: 600;
+}
+
+/* Prices and any figure that sits in a column. Never monospace. */
+.eg-tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Display serif — 32px and above only, never bold. */
+.eg-display {
+  font-family: var(--eg-font-display);
+  font-weight: 400;
+  letter-spacing: var(--eg-tracking-tight);
+  line-height: var(--eg-leading-display);
+}
+
+/* ==========================================================================
+   4. Focus — the only rounded thing in the system, and it must always be
+   visible to keyboard users.
+   ========================================================================== */
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--eg-accent);
+  outline-offset: 2px;
+  border-radius: var(--eg-radius-focus);
+}
+
+::selection {
+  background: var(--eg-accent-soft);
+  color: var(--eg-ink);
+}
+
+.screen-reader-text,
+.eg-sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.eg-skip-link:focus {
+  position: fixed;
+  top: var(--eg-space-4);
+  left: var(--eg-space-4);
+  z-index: var(--eg-z-gate);
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip: auto;
+  clip-path: none;
+  overflow: visible;
+  padding: var(--eg-space-2) var(--eg-space-4);
+  background: var(--eg-paper);
+  border: 1px solid var(--eg-ink);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+/* ==========================================================================
+   5. Hover vocabulary — underline on links, crossfade on product images.
+   Nothing moves, nothing lifts.
+   ========================================================================== */
+
+.eg-link {
+  position: relative;
+  text-decoration: none;
+}
+
+.eg-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.12em;
+  height: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--eg-duration-fast) var(--eg-ease-standard);
+}
+
+.eg-link:hover::after,
+.eg-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.eg-link[data-active="true"] {
+  color: var(--eg-accent);
+}
+
+.eg-link[data-active="true"]::after {
+  transform: scaleX(1);
+}
+
+/* ==========================================================================
+   6. Layout primitives
+   ========================================================================== */
+
+.eg-container {
+  width: 100%;
+  max-width: var(--eg-max-width);
+  margin-inline: auto;
+  padding-inline: var(--eg-gutter);
+}
+
+.eg-container--reading {
+  max-width: calc(var(--eg-reading-width) + 2 * var(--eg-gutter));
+}
+
+.eg-section {
+  margin-top: var(--eg-space-11);
+}
+
+.eg-section--first {
+  margin-top: var(--eg-space-9);
+}
+
+@media (max-width: 767px) {
+  .eg-section { margin-top: var(--eg-space-9); }
+}
+
+/* ==========================================================================
+   7. Header
+   --------------------------------------------------------------------------
+   Hairline bar on paper. Never translucent, never blurred, never shadowed.
+   Sticky, and it does not change height or colour on scroll.
+   ========================================================================== */
+
+.eg-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--eg-z-header);
+  height: var(--eg-header-height);
+  background: var(--eg-paper);
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+.eg-header__inner {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--eg-space-3);
+}
+
+@media (min-width: 640px) {
+  .eg-header__inner { gap: var(--eg-space-6); }
+}
+
+.eg-wordmark {
+  flex-shrink: 0;
+  font-size: var(--eg-text-xs);
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--eg-ink);
+}
+
+@media (min-width: 640px) {
+  .eg-wordmark {
+    font-size: var(--eg-text-sm);
+    letter-spacing: var(--eg-tracking-wordmark);
+  }
+}
+
+.eg-wordmark img {
+  max-height: 32px;
+  width: auto;
+}
+
+.eg-nav { display: none; }
+
+@media (min-width: 768px) {
+  .eg-nav { display: block; }
+}
+
+.eg-nav ul {
+  display: flex;
+  align-items: center;
+  gap: var(--eg-space-6);
+  list-style: none;
+}
+
+.eg-nav a {
+  font-size: var(--eg-text-sm);
+  letter-spacing: var(--eg-tracking-wide);
+  color: var(--eg-ink);
+}
+
+/* Padding, not size, carries the tap target. Icons stay 20px so they sit
+   correctly beside 14px type, while each control measures 44px — the
+   accessible minimum for a finger. */
+.eg-header__actions {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: var(--eg-space-1);
+}
+
+@media (min-width: 640px) {
+  .eg-header__actions { margin-right: calc(var(--eg-space-3) * -1); }
+}
+
+.eg-header__action {
+  display: flex;
+  align-items: center;
+  gap: var(--eg-space-2);
+  padding: var(--eg-space-3);
+  color: var(--eg-ink);
+}
+
+/* A count beside the icon rather than a badge on it: a badge is a filled
+   circle, and nothing in this system is round or filled. The slot keeps its
+   width so the header does not shift when the first item goes in. */
+.eg-bag-count {
+  display: inline-block;
+  min-width: 0.75ch;
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+/* Mobile category row — the desktop nav is hidden below 768px, so the
+   categories need somewhere to live rather than disappearing entirely. */
+.eg-mobile-nav {
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+@media (min-width: 768px) {
+  .eg-mobile-nav { display: none; }
+}
+
+.eg-mobile-nav ul {
+  display: flex;
+  align-items: center;
+  gap: var(--eg-space-5);
+  list-style: none;
+  overflow-x: auto;
+  padding-block: var(--eg-space-3);
+}
+
+.eg-mobile-nav a {
+  white-space: nowrap;
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+/* ==========================================================================
+   8. Footer
+   ========================================================================== */
+
+.eg-footer {
+  margin-top: var(--eg-space-10);
+  border-top: 1px solid var(--eg-rule);
+}
+
+.eg-footer__inner { padding-block: var(--eg-space-8); }
+
+.eg-footer__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--eg-space-8);
+}
+
+@media (min-width: 768px) {
+  .eg-footer__columns { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+.eg-footer h2 {
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-footer__col ul {
+  list-style: none;
+  margin-top: var(--eg-space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--eg-space-2);
+}
+
+.eg-footer__col li a {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-footer__note {
+  margin-top: var(--eg-space-4);
+  max-width: 32ch;
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-footer__bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--eg-space-6);
+  margin-top: var(--eg-space-10);
+  padding-top: var(--eg-space-6);
+  border-top: 1px solid var(--eg-rule);
+}
+
+@media (min-width: 768px) {
+  .eg-footer__bottom {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.eg-footer__wordmark {
+  font-size: var(--eg-text-xs);
+  letter-spacing: var(--eg-tracking-wordmark);
+  color: var(--eg-ink);
+}
+
+.eg-payments {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--eg-space-2) var(--eg-space-4);
+  list-style: none;
+  margin: 0;
+}
+
+.eg-payments li {
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-copyright {
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+/* ==========================================================================
+   9. Hero
+   --------------------------------------------------------------------------
+   Dark artwork, so every mark set over it is paper rather than ink. The image
+   is laid out from its own real dimensions, never cropped to a fixed container,
+   so artwork of any shape drops in without touching this stylesheet.
+
+   Art-directed: the portrait crop on mobile carries the type on a continuous
+   ink band BENEATH it, because overlaying it ran the headline straight across
+   the object. The wide crop on desktop keeps its left side quiet and the type
+   sits in it.
+   ========================================================================== */
+
+.eg-hero {
+  background: var(--eg-ink);
+}
+
+.eg-hero__link {
+  position: relative;
+  display: block;
+}
+
+.eg-hero__link:focus-visible {
+  outline-offset: -4px;
+}
+
+/* The crop is chosen by <picture>'s media query before the fetch, so there is
+   one element here and exactly one file is ever downloaded. */
+.eg-hero__media img {
+  width: 100%;
+  height: auto;
+}
+
+.eg-hero__body {
+  padding-block: var(--eg-space-5) var(--eg-space-7);
+}
+
+@media (min-width: 640px) {
+  .eg-hero__overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+  }
+  .eg-hero__body { padding-block: 0; }
+}
+
+.eg-hero__col { width: 100%; }
+
+@media (min-width: 640px) { .eg-hero__col { max-width: 40%; } }
+@media (min-width: 1024px) { .eg-hero__col { max-width: 38%; } }
+
+.eg-hero__eyebrow {
+  font-size: var(--eg-text-xs);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Full width below the image on mobile, so it can run large. Between sm and lg
+   it shares the banner with the artwork in a narrow column, so it steps down;
+   at lg the column is wide enough for the full display size again. */
+.eg-hero__title {
+  margin-top: var(--eg-space-2);
+  font-size: var(--eg-text-5xl);
+  color: var(--eg-paper);
+}
+
+@media (min-width: 640px) { .eg-hero__title { font-size: var(--eg-text-4xl); } }
+@media (min-width: 1024px) { .eg-hero__title { font-size: var(--eg-text-5xl); } }
+
+.eg-hero__rule {
+  height: 1px;
+  width: 100%;
+  max-width: 380px;
+  margin-top: var(--eg-space-4);
+  background: rgba(255, 255, 255, 0.4);
+}
+
+@media (min-width: 640px) { .eg-hero__rule { margin-top: var(--eg-space-5); } }
+
+.eg-hero__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--eg-space-1) var(--eg-space-7);
+  margin-top: var(--eg-space-4);
+  list-style: none;
+}
+
+.eg-hero__facts li {
+  font-size: var(--eg-text-sm);
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.eg-hero__cta {
+  display: inline-block;
+  margin-top: var(--eg-space-4);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-paper);
+}
+
+@media (min-width: 640px) { .eg-hero__cta { margin-top: var(--eg-space-5); } }
+
+/* ==========================================================================
+   10. Section heading — display serif with a hairline rule beneath.
+   ========================================================================== */
+
+.eg-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--eg-space-6);
+  padding-bottom: var(--eg-space-4);
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+.eg-section-heading h2 {
+  font-size: var(--eg-text-3xl);
+  color: var(--eg-ink);
+}
+
+.eg-section-heading__action {
+  flex-shrink: 0;
+  padding-bottom: var(--eg-space-1);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-section-body { margin-top: var(--eg-space-6); }
+
+/* ==========================================================================
+   11. Product grid and card
+   --------------------------------------------------------------------------
+   Columns come from a minimum tile width rather than a fixed count per
+   breakpoint, so the layout is driven by how wide a product should be rather
+   than by how many happen to exist. A fixed count breaks at both ends of a
+   small catalogue: two products in a two-column grid rendered each one half the
+   page wide and about 900px tall.
+   ========================================================================== */
+
+.eg-grid {
+  display: grid;
+  gap: var(--eg-grid-gap);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+}
+
+.eg-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--eg-wash);
+}
+
+.eg-card__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Only fade out when there is something to fade TO. Every product having a
+   single photograph made hovering any tile blank it. */
+.eg-card__img--primary {
+  transition: opacity var(--eg-duration-base) var(--eg-ease-standard);
+}
+
+.eg-card[data-has-hover="true"] .eg-card__link:hover .eg-card__img--primary,
+.eg-card[data-has-hover="true"] .eg-card__link:focus-visible .eg-card__img--primary {
+  opacity: 0;
+}
+
+.eg-card__img--hover {
+  opacity: 0;
+  transition: opacity var(--eg-duration-base) var(--eg-ease-standard);
+}
+
+.eg-card__link:hover .eg-card__img--hover,
+.eg-card__link:focus-visible .eg-card__img--hover {
+  opacity: 1;
+}
+
+.eg-sold-out {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--eg-space-3);
+  background: rgba(245, 245, 243, 0.8);
+}
+
+.eg-sold-out span {
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink);
+}
+
+.eg-card__body { margin-top: var(--eg-space-3); }
+
+.eg-card__title {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-card__meta {
+  margin-top: var(--eg-space-1);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-card__price {
+  margin-top: var(--eg-space-1);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-price--sale { color: var(--eg-sale); }
+
+.eg-price--compare {
+  color: var(--eg-ink-muted);
+  text-decoration: line-through;
+}
+
+.eg-empty {
+  padding-block: var(--eg-space-9);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+/* ==========================================================================
+   12. Release card — a wide hairline box: image left, facts right.
+   --------------------------------------------------------------------------
+   A short release run through the tall portrait grid meant two half-page tiles
+   and a great deal of air. Laid on its side the same information takes about a
+   fifth of the height and the row reads as a deliberate pair.
+   ========================================================================== */
+
+.eg-releases {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--eg-grid-gap);
+}
+
+@media (min-width: 640px) {
+  .eg-releases { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.eg-release {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--eg-rule);
+}
+
+.eg-release__media {
+  position: relative;
+  flex-shrink: 0;
+  width: 38%;
+  aspect-ratio: 1 / 1;
+  background: var(--eg-wash);
+}
+
+@media (min-width: 640px) { .eg-release__media { width: 42%; } }
+
+.eg-release__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eg-release__body {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--eg-space-1);
+  padding: var(--eg-space-4) var(--eg-space-5);
+}
+
+.eg-release__body h3 {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+/* ==========================================================================
+   13. Category cells
+   --------------------------------------------------------------------------
+   Compact, on the same column rhythm as the product grid, so the two read as
+   one page. Each cell is a hairline box with a square image over a ruled
+   caption — the same construction as the feature blocks.
+   ========================================================================== */
+
+.eg-category {
+  display: block;
+  border: 1px solid var(--eg-rule);
+}
+
+.eg-category__media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: var(--eg-wash);
+}
+
+.eg-category__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eg-category__caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--eg-space-4);
+  padding: var(--eg-space-3) var(--eg-space-4);
+  border-top: 1px solid var(--eg-rule);
+}
+
+.eg-category__caption span:first-child {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-category__count {
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+/* ==========================================================================
+   14. Ruled feature grid and spec table
+   --------------------------------------------------------------------------
+   The dividing lines are the 1px gaps between cells, showing the container's
+   rule-coloured ground through — so the block reads as a ruled table rather
+   than a row of cards. No radius, no shadow, no fill: the structure comes
+   entirely from the lines, which is what keeps it inside a system that forbids
+   all three.
+   ========================================================================== */
+
+.eg-features {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  border: 1px solid var(--eg-rule);
+  background: var(--eg-rule);
+}
+
+@media (min-width: 640px) {
+  .eg-features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 1024px) {
+  .eg-features { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .eg-features--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .eg-features--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.eg-feature {
+  display: flex;
+  flex-direction: column;
+  padding: var(--eg-space-6);
+  background: var(--eg-paper);
+}
+
+.eg-feature__icon { color: var(--eg-ink); }
+
+.eg-feature h3 {
+  margin-top: var(--eg-space-5);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-feature p {
+  margin-top: var(--eg-space-2);
+  font-size: var(--eg-text-sm);
+  line-height: var(--eg-leading-body);
+  color: var(--eg-ink-muted);
+}
+
+/* Rows rather than cells, because a spec sheet is read down and not across. */
+.eg-specs { border-top: 1px solid var(--eg-rule); }
+
+.eg-specs__row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--eg-space-1);
+  padding-block: var(--eg-space-4);
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+@media (min-width: 640px) {
+  .eg-specs__row {
+    flex-direction: row;
+    gap: var(--eg-space-6);
+  }
+}
+
+.eg-specs__row dt {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+@media (min-width: 640px) {
+  .eg-specs__row dt {
+    width: 14rem;
+    flex-shrink: 0;
+  }
+}
+
+.eg-specs__row dd {
+  margin: 0;
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+/* ==========================================================================
+   15. Editorial copy — the long-form block that carries the organic traffic.
+   ========================================================================== */
+
+.eg-editorial {
+  max-width: var(--eg-reading-width);
+}
+
+.eg-editorial h2 {
+  font-size: var(--eg-text-4xl);
+  color: var(--eg-ink);
+}
+
+.eg-editorial h3 {
+  margin-top: var(--eg-space-6);
+  font-size: var(--eg-text-3xl);
+  color: var(--eg-ink);
+}
+
+.eg-editorial p {
+  margin-top: var(--eg-space-4);
+  font-size: var(--eg-text-base);
+  color: var(--eg-ink);
+}
+
+.eg-editorial h2 + p { margin-top: var(--eg-space-6); }
+
+/* The single accent use in body copy. */
+.eg-editorial a,
+.eg-prose a {
+  color: var(--eg-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
+}
+
+.eg-prose > * + * { margin-top: var(--eg-space-5); }
+
+.eg-prose {
+  font-size: var(--eg-text-base);
+  color: var(--eg-ink);
+}
+
+.eg-prose ul,
+.eg-prose ol { padding-left: 1.25em; }
+
+.eg-prose li { margin-top: var(--eg-space-1); }
+
+.eg-prose blockquote {
+  padding-left: var(--eg-space-5);
+  border-left: 1px solid var(--eg-rule);
+  color: var(--eg-ink-muted);
+}
+
+/* ==========================================================================
+   16. Product detail page
+   ========================================================================== */
+
+.eg-pdp {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--eg-space-8);
+}
+
+@media (min-width: 1024px) {
+  .eg-pdp {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--eg-column-gap);
+  }
+  .eg-pdp__media { grid-column: span 7 / span 7; }
+  .eg-pdp__detail { grid-column: span 5 / span 5; }
+}
+
+@media (min-width: 1280px) {
+  .eg-pdp__media { grid-column: span 8 / span 8; }
+  .eg-pdp__detail { grid-column: span 4 / span 4; }
+}
+
+.eg-pdp__gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--eg-space-2);
+}
+
+@media (min-width: 640px) {
+  .eg-pdp__gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .eg-pdp__gallery--single { grid-template-columns: minmax(0, 1fr); }
+}
+
+.eg-pdp__figure {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--eg-wash);
+  margin: 0;
+}
+
+.eg-pdp__figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eg-pdp__sticky { position: static; }
+
+@media (min-width: 1024px) {
+  .eg-pdp__sticky {
+    position: sticky;
+    top: calc(var(--eg-header-height) + 2rem);
+  }
+}
+
+.eg-pdp__category {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-pdp__title {
+  margin-top: var(--eg-space-2);
+  font-size: var(--eg-text-lg);
+  color: var(--eg-ink);
+}
+
+.eg-pdp__price {
+  margin-top: var(--eg-space-3);
+  font-size: var(--eg-text-lg);
+}
+
+.eg-pdp__description {
+  margin-top: var(--eg-space-6);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-pdp__accordions { margin-top: var(--eg-space-7); }
+
+/* Variant swatches — square, 1px ink border when selected. No fill, no radius,
+   no accent colour: accent is reserved for focus, active nav and inline links. */
+.eg-variants {
+  margin-top: var(--eg-space-6);
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.eg-variants legend {
+  padding: 0;
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-variants__options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--eg-space-2);
+  margin-top: var(--eg-space-3);
+}
+
+.eg-variant {
+  min-width: 3rem;
+  padding: var(--eg-space-2) var(--eg-space-4);
+  border: 1px solid var(--eg-rule);
+  font-size: var(--eg-text-sm);
+  letter-spacing: var(--eg-tracking-wide);
+  color: var(--eg-ink);
+  transition: border-color var(--eg-duration-fast) var(--eg-ease-standard);
+}
+
+.eg-variant[aria-pressed="true"] { border-color: var(--eg-ink); }
+
+.eg-variant:disabled {
+  color: var(--eg-ink-faint);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   17. Buttons
+   ========================================================================== */
+
+.eg-button {
+  display: block;
+  width: 100%;
+  padding: var(--eg-space-4) var(--eg-space-5);
+  background: var(--eg-ink);
+  color: var(--eg-paper);
+  font-size: var(--eg-text-sm);
+  letter-spacing: var(--eg-tracking-wide);
+  text-align: center;
+  transition: opacity var(--eg-duration-fast) var(--eg-ease-standard);
+}
+
+.eg-button:hover { opacity: 0.88; }
+
+.eg-button:disabled,
+.eg-button[aria-disabled="true"] {
+  background: var(--eg-wash);
+  color: var(--eg-ink-muted);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.eg-button--inline {
+  display: inline-block;
+  width: auto;
+}
+
+.eg-add-to-bag { margin-top: var(--eg-space-6); }
+
+/* ==========================================================================
+   18. Accordion
+   --------------------------------------------------------------------------
+   The grid-rows trick animates height without a measured pixel value and
+   without moving anything else on the page.
+   ========================================================================== */
+
+.eg-accordion { border-bottom: 1px solid var(--eg-rule); }
+
+.eg-accordion__trigger {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--eg-space-4);
+  padding-block: var(--eg-space-4);
+  text-align: left;
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-accordion__sign { color: var(--eg-ink-muted); }
+
+.eg-accordion__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--eg-duration-base) var(--eg-ease-standard);
+}
+
+.eg-accordion[data-open="true"] .eg-accordion__panel { grid-template-rows: 1fr; }
+
+.eg-accordion__inner { overflow: hidden; }
+
+.eg-accordion__content {
+  padding-bottom: var(--eg-space-5);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-accordion__content ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--eg-space-1);
+}
+
+/* ==========================================================================
+   19. Filter bar — a single row of text toggles, never dropdowns.
+   ========================================================================== */
+
+.eg-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--eg-space-2) var(--eg-space-6);
+  margin-top: var(--eg-space-6);
+  padding-bottom: var(--eg-space-4);
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+.eg-filters a {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-filters__count {
+  margin-left: auto;
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+/* ==========================================================================
+   20. Bag drawer — slides in over motion.duration.slow (520ms).
+   ========================================================================== */
+
+.eg-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--eg-z-scrim);
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--eg-duration-slow) var(--eg-ease-standard);
+}
+
+.eg-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: var(--eg-z-drawer);
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 420px;
+  height: 100vh;
+  height: 100dvh;
+  background: var(--eg-paper);
+  border-left: 1px solid var(--eg-rule);
+  transform: translateX(100%);
+  transition: transform var(--eg-duration-slow) var(--eg-ease-standard);
+}
+
+body.eg-drawer-open .eg-scrim {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+body.eg-drawer-open .eg-drawer { transform: translateX(0); }
+
+body.eg-drawer-open { overflow: hidden; }
+
+.eg-drawer__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--eg-space-4) var(--eg-space-5);
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+.eg-drawer__head h2 {
+  font-size: var(--eg-text-sm);
+  letter-spacing: var(--eg-tracking-wide);
+  color: var(--eg-ink);
+}
+
+.eg-drawer__close {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-drawer__empty {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--eg-space-3);
+  padding-inline: var(--eg-space-5);
+}
+
+.eg-drawer__empty p {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-drawer__lines {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.eg-line {
+  display: flex;
+  gap: var(--eg-space-4);
+  padding: var(--eg-space-4) var(--eg-space-5);
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+.eg-line__media {
+  position: relative;
+  display: block;
+  flex-shrink: 0;
+  width: 4rem;
+  aspect-ratio: 4 / 5;
+  background: var(--eg-wash);
+}
+
+.eg-line__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eg-line__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.eg-line__title {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-line__variant {
+  margin-top: var(--eg-space-1);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-line__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--eg-space-4);
+  margin-top: var(--eg-space-3);
+}
+
+.eg-qty {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--eg-rule);
+}
+
+.eg-qty button {
+  padding: var(--eg-space-1) var(--eg-space-3);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-qty__value {
+  min-width: 2rem;
+  text-align: center;
+  font-size: var(--eg-text-sm);
+}
+
+.eg-line__total {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-line__remove {
+  margin-top: var(--eg-space-3);
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-drawer__foot {
+  padding: var(--eg-space-5);
+  border-top: 1px solid var(--eg-rule);
+}
+
+.eg-drawer__subtotal {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-drawer__note {
+  margin-top: var(--eg-space-2);
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-drawer__foot .eg-button { margin-top: var(--eg-space-4); }
+
+/* ==========================================================================
+   21. Forms — bare underline fields, text submit to the right.
+   ========================================================================== */
+
+.eg-field {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--eg-space-4);
+  border-bottom: 1px solid var(--eg-rule);
+  transition: border-color var(--eg-duration-fast) var(--eg-ease-standard);
+}
+
+.eg-field:focus-within { border-color: var(--eg-ink); }
+
+.eg-field input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-block: var(--eg-space-3);
+  background: transparent;
+  border: 0;
+  font-size: var(--eg-text-base);
+  color: var(--eg-ink);
+  outline: none;
+}
+
+.eg-field input::placeholder { color: var(--eg-ink-faint); }
+.eg-field input:disabled { color: var(--eg-ink-muted); }
+
+.eg-field button {
+  flex-shrink: 0;
+  padding-block: var(--eg-space-3);
+  font-size: var(--eg-text-sm);
+  letter-spacing: var(--eg-tracking-wide);
+  color: var(--eg-ink);
+}
+
+.eg-field button:disabled { color: var(--eg-ink-muted); }
+
+.eg-field--compact { gap: var(--eg-space-3); }
+.eg-field--compact input { padding-block: var(--eg-space-2); font-size: var(--eg-text-sm); }
+.eg-field--compact button { padding-block: var(--eg-space-2); }
+
+/* Reserved line so an error never shifts the layout. */
+.eg-form-message {
+  margin-top: var(--eg-space-3);
+  min-height: 1.2em;
+  text-align: left;
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-form-message[data-error="true"] { color: var(--eg-sale); }
+
+/* Stacked label/underline field, used through checkout. */
+.eg-input label {
+  display: block;
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-input input,
+.eg-input textarea,
+.eg-input select {
+  width: 100%;
+  margin-top: var(--eg-space-2);
+  padding-block: var(--eg-space-2);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--eg-rule);
+  font-size: var(--eg-text-base);
+  color: var(--eg-ink);
+  outline: none;
+}
+
+.eg-input input:focus,
+.eg-input textarea:focus,
+.eg-input select:focus { border-bottom-color: var(--eg-ink); }
+
+.eg-input__error {
+  margin-top: var(--eg-space-1);
+  min-height: 1.1em;
+  font-size: var(--eg-text-xs);
+  color: var(--eg-sale);
+}
+
+/* ==========================================================================
+   22. Gate — a clean full viewport, no header, no footer, no bag.
+   ========================================================================== */
+
+.eg-gate {
+  display: flex;
+  min-height: 100vh;
+  min-height: 100dvh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--eg-space-9) var(--eg-gutter);
+  text-align: center;
+}
+
+.eg-gate__inner {
+  width: 100%;
+  max-width: 720px;
+}
+
+.eg-gate__wordmark {
+  font-size: var(--eg-text-sm);
+  font-weight: 500;
+  letter-spacing: var(--eg-tracking-wordmark);
+  color: var(--eg-ink);
+}
+
+.eg-gate__images {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--eg-space-2);
+  margin-top: var(--eg-space-8);
+}
+
+@media (min-width: 640px) {
+  .eg-gate__images { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.eg-gate__figure {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--eg-wash);
+  margin: 0;
+}
+
+.eg-gate__figure:not(:first-child) { display: none; }
+
+@media (min-width: 640px) {
+  .eg-gate__figure:not(:first-child) { display: block; }
+}
+
+.eg-gate__figure img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eg-gate__headline {
+  margin-top: var(--eg-space-8);
+  font-size: var(--eg-text-4xl);
+  color: var(--eg-ink);
+}
+
+.eg-gate__form {
+  max-width: 420px;
+  margin: var(--eg-space-7) auto 0;
+  text-align: left;
+  transition: opacity var(--eg-duration-base) var(--eg-ease-standard);
+}
+
+.eg-gate__form[data-status="success"] { opacity: 0; }
+
+.eg-gate__links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--eg-space-2) var(--eg-space-6);
+  margin-top: var(--eg-space-9);
+  list-style: none;
+}
+
+.eg-gate__links a {
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+/* One orchestrated moment, on load, once. */
+@keyframes eg-gate-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.eg-reveal {
+  opacity: 0;
+  animation: eg-gate-rise var(--eg-duration-slow) var(--eg-ease-standard) forwards;
+  animation-delay: calc(var(--eg-gate-stagger) * var(--eg-step, 0));
+}
+
+/* ==========================================================================
+   23. Checkout
+   ========================================================================== */
+
+.eg-checkout {
+  display: grid;
+  gap: var(--eg-space-9);
+  margin-top: var(--eg-space-8);
+}
+
+@media (min-width: 1024px) {
+  .eg-checkout {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--eg-column-gap);
+  }
+  .eg-checkout__details { grid-column: span 7 / span 7; }
+  .eg-checkout__summary { grid-column: span 5 / span 5; }
+}
+
+.eg-checkout h2 {
+  font-size: var(--eg-text-sm);
+  letter-spacing: var(--eg-tracking-wide);
+  color: var(--eg-ink);
+}
+
+.eg-checkout__fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--eg-space-5);
+  margin-top: var(--eg-space-4);
+}
+
+@media (min-width: 640px) {
+  .eg-checkout__fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .eg-checkout__fields .eg-span-2 { grid-column: span 2 / span 2; }
+}
+
+.eg-checkout__group + .eg-checkout__group { margin-top: var(--eg-space-8); }
+
+.eg-summary { border: 1px solid var(--eg-rule); }
+
+.eg-summary > h2 {
+  padding: var(--eg-space-4) var(--eg-space-5);
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+.eg-summary ul { list-style: none; }
+
+.eg-summary .eg-line { padding-block: var(--eg-space-4); }
+.eg-summary .eg-line__media { width: 3.5rem; }
+
+.eg-summary__totals { padding: var(--eg-space-4) var(--eg-space-5); }
+
+.eg-summary__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eg-summary__row + .eg-summary__row { margin-top: var(--eg-space-2); }
+
+.eg-summary__row dt {
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-summary__row dd {
+  margin: 0;
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-summary__row--total {
+  margin-top: var(--eg-space-4);
+  padding-top: var(--eg-space-4);
+  border-top: 1px solid var(--eg-rule);
+}
+
+.eg-summary__row--total dt { color: var(--eg-ink); }
+.eg-summary__row--total dd { font-size: var(--eg-text-base); }
+
+.eg-summary__note {
+  padding: 0 var(--eg-space-5) var(--eg-space-4);
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-checkout__error {
+  margin-top: var(--eg-space-3);
+  min-height: 1.2em;
+  font-size: var(--eg-text-xs);
+  color: var(--eg-sale);
+}
+
+.eg-checkout__legal {
+  margin-top: var(--eg-space-3);
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-confirmed__reference {
+  margin-top: var(--eg-space-6);
+  padding: var(--eg-space-5);
+  border: 1px solid var(--eg-rule);
+}
+
+.eg-confirmed__reference dt {
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+
+.eg-confirmed__reference dd {
+  margin: var(--eg-space-2) 0 0;
+  font-size: var(--eg-text-lg);
+  letter-spacing: var(--eg-tracking-wide);
+  color: var(--eg-ink);
+}
+
+.eg-in-stock { color: var(--eg-positive); }
+
+/* ==========================================================================
+   24. Page furniture — archives, single post, comments, pagination, 404.
+   ========================================================================== */
+
+.eg-page { padding-block: var(--eg-space-8); }
+
+.eg-page__title {
+  font-size: var(--eg-text-3xl);
+  color: var(--eg-ink);
+}
+
+.eg-page__meta {
+  margin-top: var(--eg-space-2);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-page__body { margin-top: var(--eg-space-7); }
+
+.eg-posts {
+  display: grid;
+  gap: var(--eg-space-7);
+  margin-top: var(--eg-space-7);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+}
+
+.eg-post-card__media {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--eg-wash);
+  overflow: hidden;
+}
+
+.eg-post-card__media img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eg-post-card h2 {
+  margin-top: var(--eg-space-3);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink);
+}
+
+.eg-post-card p {
+  margin-top: var(--eg-space-1);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-ink-muted);
+}
+
+.eg-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--eg-space-4);
+  margin-top: var(--eg-space-8);
+  padding-top: var(--eg-space-5);
+  border-top: 1px solid var(--eg-rule);
+  font-size: var(--eg-text-sm);
+}
+
+.eg-pagination .page-numbers { color: var(--eg-ink); }
+.eg-pagination .page-numbers.current { color: var(--eg-accent); }
+
+.eg-404 {
+  display: flex;
+  min-height: 70vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-inline: var(--eg-gutter);
+  text-align: center;
+}
+
+.eg-404 h1 {
+  margin-top: var(--eg-space-7);
+  font-size: var(--eg-text-4xl);
+  color: var(--eg-ink);
+}
+
+.eg-404 p {
+  margin-top: var(--eg-space-4);
+  max-width: 42ch;
+  font-size: var(--eg-text-base);
+  color: var(--eg-ink-muted);
+}
+
+.eg-404 a {
+  margin-top: var(--eg-space-7);
+  font-size: var(--eg-text-sm);
+  color: var(--eg-accent);
+}
+
+.eg-comments { margin-top: var(--eg-space-9); }
+.eg-comments ol { list-style: none; }
+.eg-comments .comment-body { padding-block: var(--eg-space-5); border-bottom: 1px solid var(--eg-rule); }
+.eg-comments .children { padding-left: var(--eg-space-6); }
+
+.eg-comments input[type="text"],
+.eg-comments input[type="email"],
+.eg-comments input[type="url"],
+.eg-comments textarea {
+  width: 100%;
+  padding-block: var(--eg-space-2);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--eg-rule);
+  outline: none;
+}
+
+.eg-comments .submit {
+  margin-top: var(--eg-space-4);
+  padding: var(--eg-space-3) var(--eg-space-6);
+  background: var(--eg-ink);
+  color: var(--eg-paper);
+  font-size: var(--eg-text-sm);
+  letter-spacing: var(--eg-tracking-wide);
+}
+
+/* Search form */
+.eg-search-form {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--eg-space-4);
+  border-bottom: 1px solid var(--eg-rule);
+}
+
+.eg-search-form input[type="search"] {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding-block: var(--eg-space-3);
+  background: transparent;
+  border: 0;
+  outline: none;
+}
+
+/* Widgets */
+.eg-widget + .eg-widget { margin-top: var(--eg-space-7); }
+.eg-widget .widget-title {
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+.eg-widget ul {
+  list-style: none;
+  margin-top: var(--eg-space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--eg-space-2);
+  font-size: var(--eg-text-sm);
+}
+
+/* WordPress core alignment classes — required for Theme Check. */
+.alignleft { float: left; margin-right: var(--eg-space-5); }
+.alignright { float: right; margin-left: var(--eg-space-5); }
+.aligncenter { display: block; margin-inline: auto; }
+.alignwide { max-width: calc(var(--eg-reading-width) + 12rem); }
+.alignfull { max-width: none; }
+.wp-caption { max-width: 100%; }
+.wp-caption-text,
+.gallery-caption {
+  margin-top: var(--eg-space-2);
+  font-size: var(--eg-text-xs);
+  color: var(--eg-ink-muted);
+}
+.sticky .eg-post-card h2::before { content: "\2605\00a0"; }
+.bypostauthor > .comment-body { border-left: 1px solid var(--eg-rule); }
+
+/* Utility */
+.eg-mt-4 { margin-top: var(--eg-space-4); }
+.eg-mt-6 { margin-top: var(--eg-space-6); }
+.eg-mt-7 { margin-top: var(--eg-space-7); }
+.eg-text-sm { font-size: var(--eg-text-sm); }
+.eg-text-xs { font-size: var(--eg-text-xs); }
+.eg-muted { color: var(--eg-ink-muted); }
+.eg-accent { color: var(--eg-accent); }
+.eg-is-hidden { display: none !important; }
+
+/* ==========================================================================
+   25. Reduced motion — neutralise every duration.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

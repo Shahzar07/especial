@@ -1,0 +1,51 @@
+/**
+ * Block editor styles.
+ *
+ * Enough of the front-end system that a writer sees roughly what they will get,
+ * without pulling the whole storefront stylesheet into an iframe that has no
+ * storefront in it.
+ */
+
+.editor-styles-wrapper {
+	--eg-ink: #000000;
+	--eg-ink-muted: #666666;
+	--eg-rule: #e6e6e4;
+	--eg-accent: #1b34ff;
+
+	background: #ffffff;
+	color: var(--eg-ink);
+	font-family: "Instrument Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 16px;
+	line-height: 1.55;
+}
+
+.editor-styles-wrapper h1,
+.editor-styles-wrapper h2,
+.editor-styles-wrapper h3 {
+	font-family: "Instrument Serif", "Times New Roman", Times, serif;
+	font-weight: 400;
+	letter-spacing: -0.02em;
+	line-height: 1.12;
+}
+
+.editor-styles-wrapper h1 { font-size: 49px; }
+.editor-styles-wrapper h2 { font-size: 39px; }
+.editor-styles-wrapper h3 { font-size: 31px; }
+
+/* The system forbids both, so the editor should not suggest otherwise. */
+.editor-styles-wrapper * {
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.editor-styles-wrapper a {
+	color: var(--eg-accent);
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+.editor-styles-wrapper blockquote {
+	padding-left: 1.5rem;
+	border-left: 1px solid var(--eg-rule);
+	color: var(--eg-ink-muted);
+}

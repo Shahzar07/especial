@@ -1,0 +1,200 @@
+[
+  {
+    "slug": "skeleton-keychain-green",
+    "title": "Skeleton Keychain — Green",
+    "category": "keychains",
+    "price_cents": 1800,
+    "compare_at_cents": 0,
+    "description": "Soft PVC keychain moulded in two layers: a pink skeleton and cauliflower head set into a green body, with a raised black outline. Supplied on a nickel-plated split ring and short chain.",
+    "details": [
+      "Soft moulded PVC, two-sided",
+      "Raised outline, flat black reverse",
+      "Nickel-plated split ring and chain",
+      "Approximately 70 × 65 mm"
+    ],
+    "featured": true,
+    "released_at": "2026-08-31",
+    "images": [
+      {
+        "file": "keychain-front.jpg",
+        "alt": "Skeleton Keychain in green, with a pink skeleton and a pink cauliflower head, on a split ring"
+      }
+    ]
+  },
+  {
+    "slug": "skeleton-keychain-sealed",
+    "title": "Skeleton Keychain — Sealed",
+    "category": "keychains",
+    "price_cents": 2000,
+    "compare_at_cents": 0,
+    "description": "The green Skeleton Keychain delivered sealed in its original polybag, unopened. For collectors who would rather it stayed that way.",
+    "details": [
+      "Soft moulded PVC, two-sided",
+      "Nickel-plated split ring and chain",
+      "Sealed polybag, unopened",
+      "Approximately 70 × 65 mm"
+    ],
+    "featured": true,
+    "released_at": "2026-08-30",
+    "images": [
+      {
+        "file": "keychain-packaged.jpg",
+        "alt": "Skeleton Keychain in green sealed in its clear polybag"
+      }
+    ]
+  },
+  {
+    "slug": "skeleton-keychain-blackout",
+    "title": "Skeleton Keychain — Blackout",
+    "category": "keychains",
+    "price_cents": 1800,
+    "compare_at_cents": 0,
+    "description": "The same moulding, worn the other way round: a flat, unprinted black face with the silhouette raised in relief. No colour, no artwork, just the shape.",
+    "details": [
+      "Soft moulded PVC, unprinted face",
+      "Raised silhouette in relief",
+      "Nickel-plated split ring and chain",
+      "Approximately 70 × 65 mm"
+    ],
+    "featured": false,
+    "released_at": "2026-08-29",
+    "images": [
+      {
+        "file": "keychain-reverse.jpg",
+        "alt": "Skeleton Keychain shown from the reverse, moulded in solid black"
+      }
+    ]
+  },
+  {
+    "slug": "skeleton-keychain-mono",
+    "title": "Skeleton Keychain — Mono",
+    "category": "keychains",
+    "price_cents": 1900,
+    "compare_at_cents": 0,
+    "description": "The Skeleton Keychain with every colour taken out: white bones and a white cauliflower head on a grey body, black outline. Same mould, different run.",
+    "details": [
+      "Soft moulded PVC, two-sided",
+      "Monochrome colourway",
+      "Nickel-plated split ring and chain",
+      "Approximately 70 × 65 mm"
+    ],
+    "featured": true,
+    "released_at": "2026-08-28",
+    "images": [
+      {
+        "file": "keychain-mono-front.jpg",
+        "alt": "Skeleton Keychain in monochrome, white bones on a grey body"
+      }
+    ]
+  },
+  {
+    "slug": "skeleton-keychain-mono-sealed",
+    "title": "Skeleton Keychain — Mono Sealed",
+    "category": "keychains",
+    "price_cents": 2100,
+    "compare_at_cents": 0,
+    "description": "The Mono Skeleton Keychain delivered sealed in its original polybag, unopened.",
+    "details": [
+      "Soft moulded PVC, two-sided",
+      "Monochrome colourway",
+      "Sealed polybag, unopened",
+      "Approximately 70 × 65 mm"
+    ],
+    "featured": false,
+    "released_at": "2026-08-27",
+    "images": [
+      {
+        "file": "keychain-mono-packaged.jpg",
+        "alt": "Monochrome Skeleton Keychain sealed in its clear polybag"
+      }
+    ]
+  },
+  {
+    "slug": "skeleton-keychain-mono-blackout",
+    "title": "Skeleton Keychain — Mono Blackout",
+    "category": "keychains",
+    "price_cents": 1700,
+    "compare_at_cents": 0,
+    "description": "The Mono run seen from the reverse: an unprinted black face with the silhouette raised in relief. Sold out.",
+    "details": [
+      "Soft moulded PVC, unprinted face",
+      "Raised silhouette in relief",
+      "Nickel-plated split ring and chain",
+      "Approximately 70 × 65 mm"
+    ],
+    "featured": false,
+    "released_at": "2026-08-26",
+    "images": [
+      {
+        "file": "keychain-mono-reverse.jpg",
+        "alt": "Monochrome Skeleton Keychain shown from the reverse, unprinted black"
+      }
+    ]
+  },
+  {
+    "slug": "brain-pin-yellow",
+    "title": "Brain Pin — Yellow",
+    "category": "pins",
+    "price_cents": 1400,
+    "compare_at_cents": 0,
+    "description": "Hard enamel pin in black metal: a yellow brain split by a pink spine, two white eyes, olive shading behind. Polished flat, with a single post and butterfly clutch.",
+    "details": [
+      "Hard enamel, black metal plating",
+      "Polished flat",
+      "Single post with butterfly clutch",
+      "Approximately 32 × 30 mm"
+    ],
+    "featured": true,
+    "released_at": "2026-08-25",
+    "images": [
+      {
+        "file": "pin-front.jpg",
+        "alt": "Brain Pin — yellow enamel brain split by a pink spine, with two white eyes, in black metal"
+      }
+    ]
+  },
+  {
+    "slug": "brain-pin-carded",
+    "title": "Brain Pin — Carded",
+    "category": "pins",
+    "price_cents": 1600,
+    "compare_at_cents": 0,
+    "description": "The Brain Pin mounted on its printed olive backing card and sealed, as it ships. The card is part of the release rather than packaging to throw away.",
+    "details": [
+      "Hard enamel, black metal plating",
+      "Printed backing card",
+      "Sealed polybag",
+      "Approximately 32 × 30 mm"
+    ],
+    "featured": false,
+    "released_at": "2026-08-24",
+    "images": [
+      {
+        "file": "pin-packaged.jpg",
+        "alt": "Brain Pin mounted on its printed olive backing card, sealed in a polybag"
+      }
+    ]
+  },
+  {
+    "slug": "brain-pin-backstamp",
+    "title": "Brain Pin — Backstamp",
+    "category": "pins",
+    "price_cents": 1400,
+    "compare_at_cents": 0,
+    "description": "The Brain Pin seen from behind: the plated reverse, the post, and the butterfly clutch it ships with.",
+    "details": [
+      "Hard enamel, black metal plating",
+      "Plated reverse",
+      "Single post with butterfly clutch",
+      "Approximately 32 × 30 mm"
+    ],
+    "featured": false,
+    "released_at": "2026-08-23",
+    "images": [
+      {
+        "file": "pin-reverse.jpg",
+        "alt": "Reverse of the Brain Pin, showing the plated back, post and butterfly clutch"
+      }
+    ]
+  }
+]
