@@ -1,0 +1,36 @@
+/**
+ * Admin styles — only what the theme's own screens need.
+ */
+
+.eg-meta__row {
+	margin-bottom: 1.5em;
+}
+
+.eg-meta__row .description {
+	display: block;
+	margin-top: 0.35em;
+}
+
+.eg-gallery-preview {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin: 10px 0;
+	min-height: 0;
+}
+
+.eg-gallery-preview__item img {
+	display: block;
+	width: 80px;
+	height: 100px;
+	object-fit: cover;
+	border: 1px solid #dcdcde;
+}
+
+#eg_term_image_preview img {
+	display: block;
+	max-width: 150px;
+	height: auto;
+	margin: 8px 0;
+	border: 1px solid #dcdcde;
+}

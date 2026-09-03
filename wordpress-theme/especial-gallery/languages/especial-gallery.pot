@@ -1,0 +1,1466 @@
+# Copyright (C) 2026 Especial Gallery
+# This file is distributed under the GNU General Public License v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Especial Gallery 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-09-03 11:15+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: especial-gallery\n"
+
+#: inc/class-customizer.php:282
+msgid "\"How we work\" title"
+msgstr ""
+
+#. translators: 1: products, 2: images.
+#: inc/class-demo-content.php:62
+msgid "%1$d products imported with %2$d images."
+msgstr ""
+
+#: inc/class-orders.php:112
+msgid "%1$s (%2$s) has sold out."
+msgstr ""
+
+#: inc/class-orders.php:336
+msgid "%1$s — order %2$s"
+msgstr ""
+
+#. translators: %d: number of subscribers.
+#: inc/class-admin.php:328
+msgid "%d address on the list."
+msgid_plural "%d addresses on the list."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: comment count.
+#: comments.php:22
+msgid "%d comment"
+msgid_plural "%d comments"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of products.
+#: template-parts/components/category-grid.php:65
+msgid "%d item"
+msgid_plural "%d items"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: number of pages.
+#: inc/class-demo-content.php:55
+msgid "%d page created."
+msgid_plural "%d pages created."
+msgstr[0] ""
+msgstr[1] ""
+
+#: inc/class-orders.php:104
+msgid "%s is no longer offered in that option."
+msgstr ""
+
+#: templates/template-confirmed.php:35
+msgid "A confirmation is on its way to the address you gave us. Orders ship within two working days, tracked, from our own studio."
+msgstr ""
+
+#: inc/class-customizer.php:307
+msgid "A page whose content is printed at the foot of the front page. This is where organic traffic lands, so the long-form copy lives here."
+msgstr ""
+
+#: inc/class-admin.php:283
+msgid "API key"
+msgstr ""
+
+#: inc/class-demo-content.php:120
+msgid "About the studio"
+msgstr ""
+
+#: inc/class-theme-setup.php:132
+#: inc/class-customizer.php:399
+msgid "Accent"
+msgstr ""
+
+#: footer.php:72
+msgid "Accepted payment methods"
+msgstr ""
+
+#: header.php:70
+#: header.php:71
+msgid "Account and orders"
+msgstr ""
+
+#: inc/class-post-types.php:96
+msgid "Add category"
+msgstr ""
+
+#: inc/class-post-types.php:61
+#: inc/class-post-types.php:62
+msgid "Add product"
+msgstr ""
+
+#: template-parts/components/pdp-buy.php:76
+msgid "Add to bag"
+msgstr ""
+
+#: inc/class-assets.php:82
+msgid "Added to bag."
+msgstr ""
+
+#: inc/class-assets.php:90
+msgid "Adding"
+msgstr ""
+
+#: templates/template-checkout.php:25
+msgid "Address"
+msgstr ""
+
+#: inc/class-admin.php:278
+msgid "Addresses are always stored in WordPress as well, so a misconfigured key never loses a signup. A failed provider write is logged and the visitor is admitted anyway — a broken webhook must not trap a customer at the door."
+msgstr ""
+
+#: template-parts/components/filter-bar.php:35
+msgid "All"
+msgstr ""
+
+#: inc/class-post-types.php:69
+msgid "All products"
+msgstr ""
+
+#: inc/class-theme-setup.php:191
+msgid "An optional fifth column in the footer."
+msgstr ""
+
+#: templates/template-checkout.php:26
+msgid "Apartment, suite (optional)"
+msgstr ""
+
+#: inc/class-customizer.php:375
+msgid "Append ?eg_preview=TOKEN to any URL to skip the gate. Leave empty to disable the bypass entirely."
+msgstr ""
+
+#: templates/template-confirmed.php:45
+msgid "Back to the shop"
+msgstr ""
+
+#: 404.php:18
+msgid "Back to the store"
+msgstr ""
+
+#: template-parts/components/bag-drawer.php:29
+#: template-parts/components/bag-drawer.php:34
+msgid "Bag"
+msgstr ""
+
+#: inc/class-admin.php:250
+msgid "Better still:"
+msgstr ""
+
+#: inc/class-theme-setup.php:152
+msgid "Body"
+msgstr ""
+
+#: inc/class-customizer.php:103
+msgid "Brand"
+msgstr ""
+
+#: inc/class-customizer.php:112
+msgid "Brand name"
+msgstr ""
+
+#: front-page.php:120
+msgid "Browse the shop"
+msgstr ""
+
+#: templates/template-checkout.php:135
+msgid "Card details are entered on the payment provider’s own page. They never reach this site."
+msgstr ""
+
+#: inc/class-customizer.php:284
+msgid "Catalogue title"
+msgstr ""
+
+#: front-page.php:107
+#: inc/class-customizer.php:283
+#: inc/class-post-types.php:99
+#: header.php:44
+#: header.php:90
+msgid "Categories"
+msgstr ""
+
+#: inc/class-customizer.php:283
+msgid "Categories title"
+msgstr ""
+
+#: inc/class-admin.php:222
+msgid "Category URL base"
+msgstr ""
+
+#: inc/class-meta-boxes.php:300
+#: inc/class-meta-boxes.php:320
+msgid "Category image"
+msgstr ""
+
+#: inc/class-admin.php:194
+msgid "Charged on every order below the free-shipping threshold."
+msgstr ""
+
+#: inc/class-demo-content.php:110
+msgid "Checkout"
+msgstr ""
+
+#: inc/class-meta-boxes.php:303
+#: inc/class-meta-boxes.php:330
+#: inc/class-assets.php:215
+msgid "Choose image"
+msgstr ""
+
+#: inc/class-meta-boxes.php:128
+#: inc/class-assets.php:213
+msgid "Choose images"
+msgstr ""
+
+#: templates/template-checkout.php:27
+msgid "City"
+msgstr ""
+
+#: inc/class-meta-boxes.php:129
+msgid "Clear"
+msgstr ""
+
+#: template-parts/components/bag-drawer.php:36
+msgid "Close"
+msgstr ""
+
+#: inc/class-customizer.php:392
+msgid "Colour"
+msgstr ""
+
+#: inc/class-customizer.php:458
+msgid "Comma separated. Set as words rather than logos so nothing is hotlinked."
+msgstr ""
+
+#: comments.php:51
+msgid "Comments are closed."
+msgstr ""
+
+#: inc/class-meta-boxes.php:91
+msgid "Compare-at price"
+msgstr ""
+
+#: templates/template-checkout.php:62
+#: inc/class-demo-content.php:125
+#: inc/class-demo-content.php:463
+#: inc/class-demo-content.php:478
+msgid "Contact"
+msgstr ""
+
+#: inc/class-customizer.php:145
+msgid "Contact email"
+msgstr ""
+
+#: inc/class-admin.php:384
+msgid "Contact, returns, terms and privacy pages, as starting points to rewrite."
+msgstr ""
+
+#: template-parts/components/bag-drawer.php:61
+msgid "Continue to checkout"
+msgstr ""
+
+#: inc/class-customizer.php:469
+msgid "Copyright line"
+msgstr ""
+
+#: templates/template-checkout.php:29
+msgid "Country"
+msgstr ""
+
+#: inc/class-admin.php:178
+msgid "Currency"
+msgstr ""
+
+#: front-page.php:89
+#: template-parts/sections/hero.php:25
+#: inc/class-customizer.php:215
+#: inc/class-customizer.php:281
+msgid "Current release"
+msgstr ""
+
+#: inc/class-meta-boxes.php:237
+#: inc/class-post-types.php:374
+msgid "Customer"
+msgstr ""
+
+#. translators: %s: product name.
+#: inc/class-assets.php:81
+msgid "Decrease quantity of %s"
+msgstr ""
+
+#: inc/class-customizer.php:257
+msgid "Defaults to the newest product."
+msgstr ""
+
+#: inc/class-customizer.php:113
+msgid "Defaults to the site title."
+msgstr ""
+
+#. translators: %s: date and time.
+#: inc/class-admin.php:371
+msgid "Demo content was imported on %s. Running it again fills in anything missing and leaves everything that already exists alone."
+msgstr ""
+
+#: single-eg_product.php:82
+#: inc/class-meta-boxes.php:107
+msgid "Details"
+msgstr ""
+
+#: footer.php:47
+#: inc/class-customizer.php:448
+msgid "Drop announcements and restocks. No more than twice a month."
+msgstr ""
+
+#: front-page.php:70
+msgid "Drops are announced to the mailing list before they appear anywhere else."
+msgstr ""
+
+#: inc/class-post-types.php:97
+msgid "Edit category"
+msgstr ""
+
+#: inc/class-post-types.php:63
+msgid "Edit product"
+msgstr ""
+
+#: inc/class-customizer.php:306
+msgid "Editorial block"
+msgstr ""
+
+#: template-parts/components/newsletter.php:58
+#: templates/template-checkout.php:23
+#: inc/class-admin.php:335
+msgid "Email"
+msgstr ""
+
+#: template-parts/components/newsletter.php:49
+msgid "Email address"
+msgstr ""
+
+#: inc/class-customizer.php:351
+msgid "Enable the gate"
+msgstr ""
+
+#: template-parts/components/newsletter.php:63
+#: inc/class-assets.php:89
+msgid "Enter"
+msgstr ""
+
+#: inc/class-ajax.php:300
+#: inc/class-assets.php:84
+#: inc/class-subscribe.php:29
+msgid "Enter a valid email address."
+msgstr ""
+
+#: inc/class-assets.php:88
+msgid "Entering"
+msgstr ""
+
+#: inc/class-customizer.php:38
+msgid "Especial Gallery"
+msgstr ""
+
+#: inc/class-admin.php:83
+msgid "Especial Gallery is active."
+msgstr ""
+
+#: inc/class-admin.php:39
+msgid "Especial Gallery settings"
+msgstr ""
+
+#: inc/class-admin.php:47
+msgid "Especial Gallery setup"
+msgstr ""
+
+#: front-page.php:65
+msgid "Every product page states what it is made of and how it was made. Nothing else."
+msgstr ""
+
+#: front-page.php:32
+msgid "Every release is made to a set quantity and not reprinted. When a run is gone it stays gone."
+msgstr ""
+
+#: front-page.php:118
+#: inc/class-customizer.php:284
+msgid "Everything"
+msgstr ""
+
+#: inc/class-meta-boxes.php:113
+msgid "Extra images"
+msgstr ""
+
+#: inc/class-customizer.php:212
+msgid "Eyebrow"
+msgstr ""
+
+#: inc/class-customizer.php:233
+msgid "Facts"
+msgstr ""
+
+#: inc/class-meta-boxes.php:140
+msgid "Featured — show in the release row on the front page"
+msgstr ""
+
+#: inc/class-ajax.php:292
+msgid "Fill in every required field."
+msgstr ""
+
+#: template-parts/components/filter-bar.php:30
+msgid "Filter by category"
+msgstr ""
+
+#: front-page.php:46
+msgid "Finished by hand"
+msgstr ""
+
+#: front-page.php:31
+msgid "Fixed runs"
+msgstr ""
+
+#: inc/class-admin.php:190
+msgid "Flat shipping"
+msgstr ""
+
+#: inc/class-customizer.php:436
+msgid "Footer"
+msgstr ""
+
+#: inc/class-theme-setup.php:189
+msgid "Footer extra"
+msgstr ""
+
+#: inc/class-demo-content.php:461
+msgid "Footer help"
+msgstr ""
+
+#: inc/class-demo-content.php:468
+msgid "Footer legal"
+msgstr ""
+
+#: inc/class-demo-content.php:457
+msgid "Footer shop"
+msgstr ""
+
+#: inc/class-theme-setup.php:80
+msgid "Footer — Help"
+msgstr ""
+
+#: inc/class-theme-setup.php:81
+msgid "Footer — Legal"
+msgstr ""
+
+#: inc/class-theme-setup.php:79
+msgid "Footer — Shop"
+msgstr ""
+
+#: inc/class-demo-content.php:602
+msgid "For an order query, include the reference from your confirmation email. For a damaged delivery, attach photographs of the item and the outer packaging."
+msgstr ""
+
+#: inc/class-ajax.php:330
+#: inc/class-assets.php:93
+msgid "Free"
+msgstr ""
+
+#: inc/class-admin.php:198
+msgid "Free shipping over"
+msgstr ""
+
+#. translators: %s: formatted price threshold.
+#: inc/class-assets.php:95
+msgid "Free shipping over %s."
+msgstr ""
+
+#: inc/class-customizer.php:275
+msgid "Front page"
+msgstr ""
+
+#: templates/template-checkout.php:24
+msgid "Full name"
+msgstr ""
+
+#: templates/template-gate.php:78
+msgid "Gate"
+msgstr ""
+
+#: inc/class-demo-content.php:475
+#: inc/class-theme-setup.php:82
+msgid "Gate links"
+msgstr ""
+
+#: front-page.php:77
+msgid "Hard enamel, polished flat, black metal plating"
+msgstr ""
+
+#: inc/class-customizer.php:223
+#: inc/class-customizer.php:363
+msgid "Headline"
+msgstr ""
+
+#: footer.php:20
+msgid "Help"
+msgstr ""
+
+#: inc/class-customizer.php:163
+msgid "Hero"
+msgstr ""
+
+#: inc/class-customizer.php:200
+msgid "Hero image (tall, mobile)"
+msgstr ""
+
+#: inc/class-customizer.php:181
+msgid "Hero image (wide)"
+msgstr ""
+
+#: inc/class-demo-content.php:577
+msgid "How the drops work"
+msgstr ""
+
+#: front-page.php:99
+#: inc/class-customizer.php:282
+msgid "How we work"
+msgstr ""
+
+#: inc/class-admin.php:398
+msgid "Import demo content"
+msgstr ""
+
+#: inc/class-admin.php:84
+msgid "Import the demo catalogue to get a working shop you can click through, then edit it into your own."
+msgstr ""
+
+#: inc/class-admin.php:379
+msgid "Import the demo shop"
+msgstr ""
+
+#: inc/class-post-types.php:360
+msgid "In stock"
+msgstr ""
+
+#: inc/class-meta-boxes.php:87
+msgid "In whole currency units, e.g. 18.00."
+msgstr ""
+
+#. translators: %s: product name.
+#: inc/class-assets.php:79
+msgid "Increase quantity of %s"
+msgstr ""
+
+#: inc/class-theme-setup.php:112
+#: inc/class-customizer.php:400
+msgid "Ink"
+msgstr ""
+
+#: inc/class-theme-setup.php:117
+msgid "Ink muted"
+msgstr ""
+
+#: inc/class-admin.php:388
+msgid "It is safe to run more than once: every item is matched before it is created, so nothing is duplicated and nothing you have edited is overwritten."
+msgstr ""
+
+#: inc/class-meta-boxes.php:256
+msgid "Items"
+msgstr ""
+
+#: inc/class-admin.php:336
+msgid "Joined"
+msgstr ""
+
+#: front-page.php:75
+msgid "Keychain"
+msgstr ""
+
+#: front-page.php:76
+msgid "Keychain hardware"
+msgstr ""
+
+#: inc/class-demo-content.php:291
+msgid "Keychains"
+msgstr ""
+
+#: inc/class-demo-content.php:580
+msgid "Keychains are moulded in soft PVC from hand-built masters, printed on the face and left flat black on the reverse, then finished and assembled in small batches with nickel-plated hardware. Pins are struck in metal and filled with hard enamel, polished flat, and mounted on printed backing card. Each product page lists the material and the construction, and nothing else — the object should make its own argument."
+msgstr ""
+
+#: inc/class-admin.php:267
+msgid "Klaviyo"
+msgstr ""
+
+#: inc/class-theme-setup.php:157
+msgid "Lead"
+msgstr ""
+
+#: comments.php:57
+msgid "Leave a comment"
+msgstr ""
+
+#: inc/class-customizer.php:470
+msgid "Leave empty for \"© year Brand\"."
+msgstr ""
+
+#: inc/class-meta-boxes.php:102
+msgid "Leave empty for a product with no options — it gets a single \"Standard\" option automatically."
+msgstr ""
+
+#: inc/class-admin.php:229
+msgid "Leave empty to put categories at the root of the site — /keychains rather than /collection/keychains. Give a base if a category slug would collide with a page of the same name."
+msgstr ""
+
+#: footer.php:21
+msgid "Legal"
+msgstr ""
+
+#: inc/class-customizer.php:256
+msgid "Link target"
+msgstr ""
+
+#: inc/class-customizer.php:245
+msgid "Link text"
+msgstr ""
+
+#: front-page.php:69
+msgid "List gets it first"
+msgstr ""
+
+#: inc/class-admin.php:290
+msgid "List or audience ID"
+msgstr ""
+
+#: inc/class-admin.php:266
+msgid "Mailchimp"
+msgstr ""
+
+#: footer.php:46
+#: inc/class-demo-content.php:105
+#: inc/class-admin.php:257
+msgid "Mailing list"
+msgstr ""
+
+#: inc/class-customizer.php:341
+msgid "Mailing-list gate"
+msgstr ""
+
+#: inc/class-customizer.php:445
+msgid "Mailing-list note"
+msgstr ""
+
+#: inc/class-demo-content.php:579
+msgid "Materials and making"
+msgstr ""
+
+#: front-page.php:64
+msgid "Materials listed"
+msgstr ""
+
+#: inc/class-demo-content.php:74
+msgid "Menus, hero artwork and shop settings configured."
+msgstr ""
+
+#: front-page.php:47
+msgid "Moulded and struck in small batches, then checked and assembled one at a time."
+msgstr ""
+
+#: inc/class-orders.php:333
+msgid "New order %s"
+msgstr ""
+
+#: inc/class-post-types.php:64
+msgid "New product"
+msgstr ""
+
+#: comments.php:44
+msgid "Newer comments"
+msgstr ""
+
+#: inc/class-template-tags.php:237
+msgid "Next"
+msgstr ""
+
+#: inc/class-demo-content.php:428
+msgid "Nickel hardware"
+msgstr ""
+
+#: front-page.php:76
+msgid "Nickel-plated split ring and short chain"
+msgstr ""
+
+#: inc/class-admin.php:382
+msgid "Nine products in two categories, with their photography, prices and specifications."
+msgstr ""
+
+#: inc/class-post-types.php:134
+msgid "No orders yet."
+msgstr ""
+
+#: inc/class-post-types.php:68
+msgid "No products in the bin."
+msgstr ""
+
+#: inc/class-post-types.php:67
+msgid "No products yet."
+msgstr ""
+
+#: inc/class-admin.php:319
+msgid "Nobody has signed up yet."
+msgstr ""
+
+#: inc/class-admin.php:265
+msgid "None — keep addresses in WordPress only"
+msgstr ""
+
+#: template-parts/components/product-grid.php:32
+msgid "Nothing here yet."
+msgstr ""
+
+#: taxonomy-eg_product_cat.php:38
+msgid "Nothing in this category yet."
+msgstr ""
+
+#: search.php:40
+msgid "Nothing matched that search."
+msgstr ""
+
+#: template-parts/content/none.php:12
+msgid "Nothing to show here yet."
+msgstr ""
+
+#: inc/class-customizer.php:137
+msgid "Objects for people who look twice."
+msgstr ""
+
+#: comments.php:43
+msgid "Older comments"
+msgstr ""
+
+#: front-page.php:36
+msgid "One drop time"
+msgstr ""
+
+#: inc/class-meta-boxes.php:109
+msgid "One fact per line: material, construction, hardware, size. No storytelling — the object makes its own argument."
+msgstr ""
+
+#: inc/class-meta-boxes.php:101
+msgid "One per line, as id|Label|available. Availability is 1 or 0 and defaults to 1. Example: small|Small|1"
+msgstr ""
+
+#: inc/class-customizer.php:234
+msgid "One per line. Three reads best."
+msgstr ""
+
+#: inc/class-assets.php:76
+#: header.php:81
+msgid "Open bag"
+msgstr ""
+
+#: inc/class-admin.php:88
+msgid "Open theme setup"
+msgstr ""
+
+#: inc/class-demo-content.php:607
+msgid "Opened collectibles can be returned if they arrived damaged. Send photographs of the item and its packaging and we will arrange a replacement or a refund."
+msgstr ""
+
+#: template-parts/components/pdp-buy.php:49
+msgid "Option"
+msgstr ""
+
+#: inc/class-meta-boxes.php:94
+msgid "Optional. Shown struck through beside the price. Ignored unless it is higher than the price."
+msgstr ""
+
+#: inc/class-meta-boxes.php:304
+#: inc/class-meta-boxes.php:331
+msgid "Optional. The newest product in the category is used when this is empty."
+msgstr ""
+
+#: inc/class-customizer.php:201
+msgid "Optional. The wide image is used on every screen when this is empty."
+msgstr ""
+
+#: inc/class-meta-boxes.php:98
+msgid "Options"
+msgstr ""
+
+#: inc/class-meta-boxes.php:53
+#: inc/class-post-types.php:131
+#: inc/class-post-types.php:132
+msgid "Order"
+msgstr ""
+
+#. translators: %s: order reference.
+#: inc/class-orders.php:311
+msgid "Order %s"
+msgstr ""
+
+#: templates/template-confirmed.php:22
+#: inc/class-demo-content.php:115
+msgid "Order confirmed"
+msgstr ""
+
+#: inc/class-admin.php:206
+msgid "Order notifications"
+msgstr ""
+
+#: front-page.php:130
+#: inc/class-customizer.php:285
+msgid "Ordering"
+msgstr ""
+
+#: inc/class-demo-content.php:611
+msgid "Ordering forms a contract on despatch, not on order confirmation. If an item turns out to be unavailable after you order, the order is cancelled and refunded in full."
+msgstr ""
+
+#: inc/class-customizer.php:285
+msgid "Ordering title"
+msgstr ""
+
+#: inc/class-post-types.php:130
+#: inc/class-post-types.php:135
+msgid "Orders"
+msgstr ""
+
+#: inc/class-demo-content.php:582
+msgid "Orders ship within two working days, tracked, from our own studio. Unopened items can be returned within thirty days of delivery for a full refund; opened collectibles can be returned if they arrived damaged."
+msgstr ""
+
+#: single-eg_product.php:93
+msgid "Orders ship within two working days, tracked. Shipping is calculated at checkout."
+msgstr ""
+
+#: front-page.php:79
+msgid "Packing"
+msgstr ""
+
+#: 404.php:15
+msgid "Page not found"
+msgstr ""
+
+#: inc/class-template-tags.php:245
+msgid "Pagination"
+msgstr ""
+
+#: inc/class-theme-setup.php:107
+#: inc/class-customizer.php:401
+msgid "Paper"
+msgstr ""
+
+#: inc/class-demo-content.php:618
+msgid "Payment is taken on the payment provider’s own page. Card details never reach this site."
+msgstr ""
+
+#: inc/class-customizer.php:457
+msgid "Payment marks"
+msgstr ""
+
+#: inc/class-admin.php:235
+msgid "Payments"
+msgstr ""
+
+#: front-page.php:77
+msgid "Pin"
+msgstr ""
+
+#: front-page.php:78
+msgid "Pin fixing"
+msgstr ""
+
+#: inc/class-demo-content.php:292
+msgid "Pins"
+msgstr ""
+
+#: templates/template-checkout.php:131
+#: inc/class-assets.php:87
+msgid "Place order"
+msgstr ""
+
+#: inc/class-post-types.php:377
+msgid "Placed"
+msgstr ""
+
+#: inc/class-assets.php:86
+msgid "Placing order"
+msgstr ""
+
+#: templates/template-checkout.php:28
+msgid "Postcode"
+msgstr ""
+
+#: inc/class-demo-content.php:603
+msgid "Press and stockist enquiries go to the same address."
+msgstr ""
+
+#: inc/class-customizer.php:374
+msgid "Preview token"
+msgstr ""
+
+#: inc/class-template-tags.php:236
+msgid "Previous"
+msgstr ""
+
+#: inc/class-meta-boxes.php:84
+#: inc/class-post-types.php:336
+msgid "Price"
+msgstr ""
+
+#: inc/class-demo-content.php:613
+msgid "Prices exclude shipping and any import duty, which is the responsibility of the recipient."
+msgstr ""
+
+#: inc/class-admin.php:175
+msgid "Pricing and shipping"
+msgstr ""
+
+#: inc/class-demo-content.php:453
+msgid "Primary"
+msgstr ""
+
+#: inc/class-theme-setup.php:78
+msgid "Primary (header)"
+msgstr ""
+
+#: inc/class-demo-content.php:140
+#: inc/class-demo-content.php:471
+msgid "Privacy"
+msgstr ""
+
+#: inc/class-meta-boxes.php:44
+#: inc/class-post-types.php:60
+msgid "Product"
+msgstr ""
+
+#: inc/class-admin.php:213
+msgid "Product URL base"
+msgstr ""
+
+#: inc/class-post-types.php:94
+msgid "Product categories"
+msgstr ""
+
+#: inc/class-post-types.php:95
+msgid "Product category"
+msgstr ""
+
+#: inc/class-post-types.php:59
+#: inc/class-post-types.php:70
+msgid "Products"
+msgstr ""
+
+#: inc/class-demo-content.php:612
+msgid "Products are sold in limited runs. Edition sizes stated on a product page are final and the run is not reprinted."
+msgstr ""
+
+#: inc/class-customizer.php:318
+msgid "Products per page"
+msgstr ""
+
+#: inc/class-admin.php:260
+msgid "Provider"
+msgstr ""
+
+#: templates/template-confirmed.php:39
+msgid "Quote the reference above in any message about this order."
+msgstr ""
+
+#: templates/template-confirmed.php:29
+#: inc/class-meta-boxes.php:229
+#: inc/class-post-types.php:373
+msgid "Reference"
+msgstr ""
+
+#: single-eg_product.php:128
+msgid "Related"
+msgstr ""
+
+#: inc/class-meta-boxes.php:133
+msgid "Release date"
+msgstr ""
+
+#: inc/class-customizer.php:281
+msgid "Release section title"
+msgstr ""
+
+#: inc/class-demo-content.php:578
+msgid "Releases are announced to the mailing list first and go live on the site at the same time for everyone. Items marked sold out are not restocked; if a run returns it is because the piece has been remade, and it is listed as a new release with its own run size."
+msgstr ""
+
+#: front-page.php:37
+msgid "Releases go live for everyone at once. No queue, no raffle, no reserved allocation."
+msgstr ""
+
+#: inc/class-assets.php:77
+#: inc/class-assets.php:217
+msgid "Remove"
+msgstr ""
+
+#. translators: %s: link to the product list.
+#: inc/class-admin.php:432
+msgid "Replace the demo catalogue under <a href=\"%s\">Products</a>."
+msgstr ""
+
+#: inc/class-demo-content.php:620
+msgid "Replace this page with a policy written for your own shop and jurisdiction before you launch."
+msgstr ""
+
+#: inc/class-demo-content.php:614
+msgid "Replace this page with terms written for your own shop before you take a real order."
+msgstr ""
+
+#: inc/class-assets.php:92
+msgid "Required."
+msgstr ""
+
+#: inc/class-admin.php:268
+msgid "Resend"
+msgstr ""
+
+#. translators: %s: search term.
+#: search.php:18
+msgid "Results for “%s”"
+msgstr ""
+
+#: inc/class-demo-content.php:608
+msgid "Return postage is ours when the item was faulty or wrongly sent, and yours otherwise."
+msgstr ""
+
+#: single-eg_product.php:100
+#: inc/class-demo-content.php:130
+#: inc/class-demo-content.php:464
+#: inc/class-demo-content.php:479
+msgid "Returns"
+msgstr ""
+
+#: inc/class-admin.php:437
+msgid "Rewrite the terms and privacy pages for your own shop and jurisdiction."
+msgstr ""
+
+#: inc/class-theme-setup.php:122
+#: inc/class-customizer.php:402
+msgid "Rule"
+msgstr ""
+
+#: inc/class-admin.php:397
+msgid "Run the import again"
+msgstr ""
+
+#: inc/class-demo-content.php:429
+msgid "Sealed polybag"
+msgstr ""
+
+#: front-page.php:79
+msgid "Sealed polybag; the pin on a printed backing card"
+msgstr ""
+
+#: searchform.php:14
+#: searchform.php:20
+#: searchform.php:22
+msgid "Search"
+msgstr ""
+
+#: inc/class-post-types.php:98
+msgid "Search categories"
+msgstr ""
+
+#: inc/class-post-types.php:133
+msgid "Search orders"
+msgstr ""
+
+#: inc/class-post-types.php:66
+msgid "Search products"
+msgstr ""
+
+#. translators: %s: search term.
+#: inc/class-seo.php:111
+msgid "Search results for “%s”"
+msgstr ""
+
+#: inc/class-theme-setup.php:162
+msgid "Section"
+msgstr ""
+
+#: template-parts/components/bag-drawer.php:44
+#: templates/template-checkout.php:43
+msgid "See the newest collection"
+msgstr ""
+
+#: template-parts/sections/hero.php:24
+#: inc/class-customizer.php:248
+msgid "See the object"
+msgstr ""
+
+#: inc/class-admin.php:241
+msgid "Set in wp-config.php as EG_STRIPE_SECRET_KEY, which takes precedence over this field."
+msgstr ""
+
+#. translators: %s: link to the settings page.
+#: inc/class-admin.php:423
+msgid "Set shipping, currency and your payment key under <a href=\"%s\">Shop settings</a>."
+msgstr ""
+
+#: inc/class-admin.php:202
+msgid "Set to 0 to charge shipping on every order."
+msgstr ""
+
+#. translators: %s: link to the Customizer.
+#: inc/class-admin.php:414
+msgid "Set your brand, hero artwork and colours in the <a href=\"%s\">Customizer</a>."
+msgstr ""
+
+#: inc/class-meta-boxes.php:244
+msgid "Ship to"
+msgstr ""
+
+#: single-eg_product.php:92
+#: templates/template-checkout.php:114
+#: inc/class-meta-boxes.php:276
+#: inc/class-orders.php:318
+#: inc/class-orders.php:379
+msgid "Shipping"
+msgstr ""
+
+#: templates/template-checkout.php:82
+msgid "Shipping address"
+msgstr ""
+
+#: inc/class-demo-content.php:581
+msgid "Shipping and returns"
+msgstr ""
+
+#: template-parts/components/bag-drawer.php:57
+msgid "Shipping and taxes calculated at checkout."
+msgstr ""
+
+#: front-page.php:54
+msgid "Ships in two days"
+msgstr ""
+
+#: footer.php:19
+msgid "Shop"
+msgstr ""
+
+#: inc/class-admin.php:40
+#: inc/class-admin.php:170
+msgid "Shop settings"
+msgstr ""
+
+#: inc/class-theme-setup.php:179
+msgid "Shown beside blog posts and archives."
+msgstr ""
+
+#: inc/class-customizer.php:124
+msgid "Shown letterspaced in the header. Usually the brand name in capitals."
+msgstr ""
+
+#: inc/class-theme-setup.php:177
+msgid "Sidebar"
+msgstr ""
+
+#: template-parts/components/newsletter.php:64
+#: inc/class-assets.php:91
+msgid "Sign up"
+msgstr ""
+
+#: templates/template-gate.php:61
+#: inc/class-customizer.php:366
+msgid "Sign up for our list"
+msgstr ""
+
+#: front-page.php:78
+msgid "Single post with a butterfly clutch"
+msgstr ""
+
+#: inc/class-demo-content.php:418
+msgid "Skeleton Keychain"
+msgstr ""
+
+#: header.php:30
+msgid "Skip to content"
+msgstr ""
+
+#: inc/class-theme-setup.php:147
+msgid "Small"
+msgstr ""
+
+#: inc/class-demo-content.php:575
+msgid "Small runs, made properly"
+msgstr ""
+
+#: inc/class-demo-content.php:427
+msgid "Soft PVC"
+msgstr ""
+
+#: front-page.php:75
+msgid "Soft moulded PVC, two-sided, raised outline, flat black reverse"
+msgstr ""
+
+#: front-page.php:41
+msgid "Sold direct"
+msgstr ""
+
+#: template-parts/components/pdp-buy.php:77
+#: template-parts/components/product-card.php:69
+#: template-parts/components/release-card.php:37
+#: inc/class-post-types.php:359
+msgid "Sold out"
+msgstr ""
+
+#: inc/class-meta-boxes.php:147
+msgid "Sold out — overrides every option"
+msgstr ""
+
+#: inc/class-orders.php:81
+#: inc/class-orders.php:95
+msgid "Something in your bag is no longer available."
+msgstr ""
+
+#: inc/class-assets.php:83
+#: inc/class-subscribe.php:38
+msgid "Something went wrong on our end. Try again."
+msgstr ""
+
+#: inc/class-customizer.php:286
+msgid "Specification title"
+msgstr ""
+
+#: inc/class-catalog.php:176
+msgid "Standard"
+msgstr ""
+
+#: inc/class-meta-boxes.php:233
+#: inc/class-post-types.php:376
+msgid "Status"
+msgstr ""
+
+#: inc/class-post-types.php:337
+msgid "Stock"
+msgstr ""
+
+#: front-page.php:42
+msgid "Straight from the studio to you. No resellers, no distributors, no marked-up middle."
+msgstr ""
+
+#: inc/class-admin.php:238
+msgid "Stripe secret key"
+msgstr ""
+
+#: inc/class-admin.php:303
+msgid "Subscribers"
+msgstr ""
+
+#: template-parts/components/bag-drawer.php:53
+#: templates/template-checkout.php:110
+#: inc/class-meta-boxes.php:274
+#: inc/class-orders.php:317
+msgid "Subtotal"
+msgstr ""
+
+#: inc/class-customizer.php:134
+msgid "Tagline"
+msgstr ""
+
+#: inc/class-demo-content.php:135
+#: inc/class-demo-content.php:470
+#: inc/class-demo-content.php:477
+msgid "Terms"
+msgstr ""
+
+#: templates/template-confirmed.php:25
+msgid "Thank you. Your order is in."
+msgstr ""
+
+#: inc/class-orders.php:67
+msgid "That is more items than we can process at once."
+msgstr ""
+
+#: inc/class-customizer.php:165
+msgid "The artwork is laid out from its own dimensions and never cropped, so a file of any shape drops in. The wordmark is set over it in white, so leave the left of the wide image and the lower part of the tall one quiet."
+msgstr ""
+
+#: inc/class-meta-boxes.php:115
+msgid "The featured image is the resting state. The first extra image is what a tile crossfades to on hover; the rest appear on the product page."
+msgstr ""
+
+#: inc/class-admin.php:440
+msgid "The gate"
+msgstr ""
+
+#: inc/class-admin.php:385
+msgid "The header and footer menus, the hero artwork, and pretty permalinks."
+msgstr ""
+
+#: inc/class-admin.php:442
+msgid "The mailing-list gate is on by default and can be switched off in the Customizer. It is a mailing-list capture, not access control: search engines and social unfurlers are let through on a User-Agent match, which is deliberately spoofable, so that shared links still rank and still preview. Never put anything sensitive behind it."
+msgstr ""
+
+#: inc/class-admin.php:383
+msgid "The mailing-list gate, checkout and confirmation pages the bag depends on."
+msgstr ""
+
+#: inc/class-orders.php:404
+msgid "The payment provider refused the order. Try again."
+msgstr ""
+
+#: inc/class-customizer.php:394
+msgid "The system reserves colour for the product photography and the focus ring. Change these only with a reason."
+msgstr ""
+
+#: inc/class-admin.php:48
+#: inc/class-admin.php:363
+msgid "Theme setup"
+msgstr ""
+
+#: inc/class-admin.php:408
+msgid "Then"
+msgstr ""
+
+#: front-page.php:59
+msgid "Thirty-day returns"
+msgstr ""
+
+#: inc/class-admin.php:380
+msgid "This creates:"
+msgstr ""
+
+#: inc/class-customizer.php:343
+msgid "This is a mailing-list capture, not access control: search and social crawlers are let through on a spoofable User-Agent so links still rank and unfurl. Never put anything sensitive behind it."
+msgstr ""
+
+#: 404.php:16
+msgid "This page has moved or never existed."
+msgstr ""
+
+#: inc/class-security.php:63
+msgid "Those details were not recognised."
+msgstr ""
+
+#: inc/class-subscribe.php:58
+msgid "Too many attempts. Try again shortly."
+msgstr ""
+
+#: templates/template-checkout.php:118
+#: inc/class-meta-boxes.php:272
+#: inc/class-meta-boxes.php:279
+#: inc/class-orders.php:319
+#: inc/class-post-types.php:375
+msgid "Total"
+msgstr ""
+
+#: front-page.php:55
+msgid "Tracked from our own studio. Shipping is calculated at checkout."
+msgstr ""
+
+#: inc/class-demo-content.php:606
+msgid "Unopened items can be returned within thirty days of delivery for a full refund."
+msgstr ""
+
+#: single-eg_product.php:101
+msgid "Unopened items can be returned within thirty days of delivery. Opened collectibles can be returned if they arrived damaged."
+msgstr ""
+
+#: front-page.php:60
+msgid "Unopened items come back for a full refund. Opened ones if they arrived damaged."
+msgstr ""
+
+#: inc/class-assets.php:214
+msgid "Use these images"
+msgstr ""
+
+#: inc/class-assets.php:216
+msgid "Use this image"
+msgstr ""
+
+#: inc/class-post-types.php:65
+msgid "View product"
+msgstr ""
+
+#: inc/class-theme-setup.php:127
+msgid "Wash"
+msgstr ""
+
+#: inc/class-demo-content.php:617
+msgid "We collect an email address when you join the mailing list, and a name and delivery address when you place an order. We use them to send you what you asked for and nothing else."
+msgstr ""
+
+#: inc/class-demo-content.php:576
+msgid "We produce collectible objects in short runs. Every release is made to a fixed quantity, sold direct, and not reprinted. When a run is gone it stays gone, and the next one is a different object rather than the same one again in another colour."
+msgstr ""
+
+#: front-page.php:137
+#: inc/class-customizer.php:286
+msgid "What the objects are"
+msgstr ""
+
+#: inc/class-admin.php:247
+msgid "With a key set, checkout creates a real Stripe Checkout Session and the customer pays on Stripe's own page. With no key the order is recorded and acknowledged instead, so the whole flow is testable before an account exists. Card details never touch this site either way."
+msgstr ""
+
+#: inc/class-customizer.php:123
+msgid "Wordmark"
+msgstr ""
+
+#: inc/class-demo-content.php:601
+msgid "Write to us and we will answer within two working days."
+msgstr ""
+
+#: inc/class-assets.php:85
+msgid "You are on the list."
+msgstr ""
+
+#: inc/class-admin.php:445
+msgid "You are seeing the shop without the gate because you are logged in as an editor. Use a private window, or set a preview token in the Customizer, to see what a visitor sees."
+msgstr ""
+
+#: inc/class-demo-content.php:619
+msgid "You can ask us to remove your details at any time by writing to the contact address."
+msgstr ""
+
+#: inc/class-admin.php:458
+msgid "You do not have permission to do that."
+msgstr ""
+
+#: inc/class-demo-content.php:40
+msgid "You do not have permission to import content."
+msgstr ""
+
+#: inc/class-admin.php:163
+#: inc/class-admin.php:357
+msgid "You do not have permission to view this page."
+msgstr ""
+
+#: templates/template-checkout.php:104
+msgid "Your bag"
+msgstr ""
+
+#: template-parts/components/bag-drawer.php:41
+#: templates/template-checkout.php:40
+#: inc/class-orders.php:60
+#: inc/class-assets.php:73
+msgid "Your bag is empty."
+msgstr ""
+
+#: inc/class-assets.php:74
+msgid "item"
+msgstr ""
+
+#: inc/class-assets.php:75
+msgid "items"
+msgstr ""
+
+#: inc/class-admin.php:251
+msgid "put the key in wp-config.php as EG_STRIPE_SECRET_KEY. It then stays out of the database and out of a database export."
+msgstr ""
+
+#: inc/class-post-types.php:398
+msgid "recorded"
+msgstr ""
+

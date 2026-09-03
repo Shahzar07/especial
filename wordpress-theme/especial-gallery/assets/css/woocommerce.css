@@ -1,0 +1,223 @@
+/**
+ * WooCommerce bridge styles.
+ *
+ * Loaded only on WooCommerce pages, and only when the plugin is active. It maps
+ * Woo's markup onto the gallery system: no radius, no shadow, hairline rules,
+ * the same type scale, and product imagery straight on the page.
+ */
+
+.eg-woo .woocommerce-products-header__title,
+.eg-woo .product_title {
+	font-family: var(--eg-font-display);
+	font-weight: 400;
+	letter-spacing: var(--eg-tracking-tight);
+	line-height: var(--eg-leading-display);
+	font-size: var(--eg-text-3xl);
+	color: var(--eg-ink);
+}
+
+.eg-woo ul.products {
+	display: grid;
+	gap: var(--eg-grid-gap);
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+	list-style: none;
+	margin: var(--eg-space-6) 0 0;
+	padding: 0;
+}
+
+.eg-woo ul.products::before,
+.eg-woo ul.products::after {
+	content: none;
+}
+
+/* Woo floats its list items and sets a percentage width per column count.
+   The grid above already handles both, so the float has to go or every tile
+   sits in the wrong track. */
+.eg-woo ul.products li.product {
+	float: none !important;
+	width: auto !important;
+	margin: 0 !important;
+	clear: none !important;
+	text-align: left;
+}
+
+.eg-woo ul.products li.product img {
+	width: 100%;
+	aspect-ratio: 4 / 5;
+	object-fit: cover;
+	background: var(--eg-wash);
+	margin: 0 0 var(--eg-space-3);
+}
+
+.eg-woo ul.products li.product .woocommerce-loop-product__title {
+	font-family: var(--eg-font-sans);
+	font-size: var(--eg-text-sm);
+	font-weight: 400;
+	color: var(--eg-ink);
+	padding: 0;
+	margin: 0;
+}
+
+.eg-woo ul.products li.product .price {
+	display: block;
+	margin-top: var(--eg-space-1);
+	font-size: var(--eg-text-sm);
+	font-variant-numeric: tabular-nums;
+	color: var(--eg-ink);
+}
+
+.eg-woo ul.products li.product .price del {
+	color: var(--eg-ink-muted);
+}
+
+.eg-woo ul.products li.product .price ins {
+	text-decoration: none;
+	color: var(--eg-sale);
+}
+
+.eg-woo .button,
+.eg-woo button.button,
+.eg-woo input.button,
+.eg-woo a.button,
+.eg-woo #respond input#submit {
+	display: inline-block;
+	padding: var(--eg-space-3) var(--eg-space-6);
+	background: var(--eg-ink);
+	color: var(--eg-paper);
+	font-size: var(--eg-text-sm);
+	font-weight: 400;
+	letter-spacing: var(--eg-tracking-wide);
+	line-height: var(--eg-leading-ui);
+	border: 0;
+	border-radius: 0;
+}
+
+.eg-woo .button:hover,
+.eg-woo a.button:hover {
+	background: var(--eg-ink);
+	opacity: 0.88;
+	color: var(--eg-paper);
+}
+
+.eg-woo .button:disabled,
+.eg-woo .button.disabled {
+	background: var(--eg-wash);
+	color: var(--eg-ink-muted);
+}
+
+.eg-woo .onsale {
+	position: absolute;
+	top: 0;
+	left: 0;
+	padding: var(--eg-space-1) var(--eg-space-2);
+	background: var(--eg-wash);
+	color: var(--eg-ink);
+	font-size: var(--eg-text-xs);
+	border-radius: 0;
+	min-height: 0;
+	min-width: 0;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.eg-woo table,
+.eg-woo table.shop_table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 0;
+	border-radius: 0;
+	font-size: var(--eg-text-sm);
+}
+
+.eg-woo table.shop_table th,
+.eg-woo table.shop_table td {
+	padding: var(--eg-space-4) 0;
+	border: 0;
+	border-bottom: 1px solid var(--eg-rule);
+	text-align: left;
+}
+
+.eg-woo input[type="text"],
+.eg-woo input[type="email"],
+.eg-woo input[type="tel"],
+.eg-woo input[type="password"],
+.eg-woo input[type="number"],
+.eg-woo textarea,
+.eg-woo select,
+.eg-woo .select2-container .select2-selection {
+	width: 100%;
+	padding: var(--eg-space-2) 0;
+	background: transparent;
+	border: 0;
+	border-bottom: 1px solid var(--eg-rule);
+	border-radius: 0;
+	font-size: var(--eg-text-base);
+	color: var(--eg-ink);
+	box-shadow: none;
+}
+
+.eg-woo input:focus,
+.eg-woo textarea:focus,
+.eg-woo select:focus {
+	border-bottom-color: var(--eg-ink);
+	outline: none;
+}
+
+.eg-woo .woocommerce-message,
+.eg-woo .woocommerce-info,
+.eg-woo .woocommerce-error {
+	padding: var(--eg-space-4);
+	background: var(--eg-wash);
+	border: 0;
+	border-left: 1px solid var(--eg-ink);
+	border-radius: 0;
+	font-size: var(--eg-text-sm);
+	list-style: none;
+}
+
+.eg-woo .woocommerce-error {
+	border-left-color: var(--eg-sale);
+}
+
+.eg-woo .quantity input.qty {
+	width: 4rem;
+	text-align: center;
+	border: 1px solid var(--eg-rule);
+	padding: var(--eg-space-2);
+}
+
+.eg-woo .woocommerce-tabs ul.tabs {
+	padding: 0;
+	margin: 0 0 var(--eg-space-5);
+	border-bottom: 1px solid var(--eg-rule);
+}
+
+.eg-woo .woocommerce-tabs ul.tabs::before,
+.eg-woo .woocommerce-tabs ul.tabs li::before,
+.eg-woo .woocommerce-tabs ul.tabs li::after {
+	content: none;
+	border: 0;
+}
+
+.eg-woo .woocommerce-tabs ul.tabs li {
+	background: transparent;
+	border: 0;
+	border-radius: 0;
+	margin: 0 var(--eg-space-5) 0 0;
+	padding: 0 0 var(--eg-space-3);
+}
+
+.eg-woo .woocommerce-tabs ul.tabs li a {
+	font-size: var(--eg-text-sm);
+	color: var(--eg-ink-muted);
+	padding: 0;
+}
+
+.eg-woo .woocommerce-tabs ul.tabs li.active a {
+	color: var(--eg-ink);
+}
+
+.eg-woo .star-rating,
+.eg-woo .woocommerce-product-rating {
+	display: none;
+}
